@@ -8,10 +8,11 @@ type role = 'public' | 'private' | 'me';
 
 export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
 	return passport.authenticate('jwt', { session: false }, (error, user) => {
-		if (error) res.status(404);
+		const authError = error || !user;
+		if (authError) res.status(404);
 		if (user) req.user = user;
 
-		next(error && error);
+		next(authError && new Error('유저 인증 권한 획득에 실패했습니다.'));
 	})(req, res, next);
 };
 

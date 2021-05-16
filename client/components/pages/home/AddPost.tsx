@@ -8,6 +8,7 @@ import { ChangeEventHandler, MutableRefObject, useEffect, useRef, useState } fro
 import { HiOutlinePhotograph } from 'react-icons/hi';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import client from '../../../api';
+import { BearerHeader } from '../../../lib/bearerHeader';
 import AddPostButton from './AddPostButton';
 
 function AddPost() {
@@ -75,7 +76,9 @@ function AddPost() {
 									form.append(e[0], e[1])
 								);
 
-								const response = await client.post('/posts', form);
+								const response = await client.post('/posts', form, {
+									headers: BearerHeader(),
+								});
 								console.log(response);
 							}}
 						>
@@ -143,6 +146,7 @@ function PostImgButton({ as, ...props }: FieldConfig | InputProps | any) {
 				</FormLabel>
 				<Input
 					type='file'
+					accept='image/*'
 					display='none'
 					onChange={(e) => {
 						props.uploadHandler(e);

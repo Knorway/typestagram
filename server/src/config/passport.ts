@@ -72,12 +72,14 @@ const handleOAuthUser = async (done: any, profile: any) => {
 const jwtVerify: jwtVerify = async (payload, done) => {
 	try {
 		const user = await User.findOne({ where: { uuid: payload.id } });
+
 		if (!user) {
 			throw new Error('존재하지 않는 계정입니다');
 		}
 
 		done(null, user);
 	} catch (error) {
+		console.log('jwt error');
 		done(error);
 	}
 };

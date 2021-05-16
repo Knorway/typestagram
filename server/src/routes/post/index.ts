@@ -4,10 +4,11 @@ import asyncHandler from 'express-async-handler';
 import AWS from 'aws-sdk';
 import multerS3 from 'multer-s3';
 import dotenv from 'dotenv';
-
-const router = express.Router();
+import { jwtAuth } from '../../middlewares/authMiddleware';
 
 dotenv.config();
+
+const router = express.Router();
 
 AWS.config.update({
 	accessKeyId: process.env.AWS_S3_ACCESS_KEY,
@@ -27,11 +28,13 @@ const imgUpload = multer({
 
 router.post(
 	'/',
+	jwtAuth,
 	imgUpload.single('img'),
-	asyncHandler(async (req, res) => {
+	asyncHandler(async (req: any, res) => {
 		console.log(req.file);
-		console.log('---------');
 		console.log(req.body);
+		console.log(req.user);
+		res.json(req.file.location);
 	})
 );
 
