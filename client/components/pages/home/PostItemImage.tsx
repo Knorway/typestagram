@@ -22,10 +22,6 @@ const LikeOverlay = styled(Box)`
 `;
 
 function PostItemImage({ post }) {
-	const { data: cachedPosts } = useSWR(`${API_URL}/posts`, {
-		revalidateOnFocus: false,
-		revalidateOnMount: false,
-	});
 	const { user } = useAuth();
 
 	const isLikedPost = useMemo(() => {
@@ -39,37 +35,6 @@ function PostItemImage({ post }) {
 	const likeToggleHandler = async () => {
 		if (!isLiked) {
 			setLikeOverlay(true);
-
-			// 	mutate(
-			// 		`${API_URL}/posts`,
-			// 		[...cachedPosts].map((oldPost) =>
-			// 			oldPost.id === post.id
-			// 				? {
-			// 						...oldPost,
-			// 						likes: post.likes.concat({
-			// 							postId: post.id,
-			// 							userId: user.id,
-			// 						}),
-			// 				  }
-			// 				: oldPost
-			// 		),
-			// 		false
-			// 	);
-			// } else {
-			// 	mutate(
-			// 		`${API_URL}/posts`,
-			// 		[...cachedPosts].map((oldPost) =>
-			// 			oldPost.id === post.id
-			// 				? {
-			// 						...oldPost,
-			// 						likes: post.likes.filter(
-			// 							(like) => like.userId !== user.id
-			// 						),
-			// 				  }
-			// 				: oldPost
-			// 		),
-			// 		false
-			// 	);
 		}
 
 		try {

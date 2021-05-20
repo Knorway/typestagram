@@ -10,13 +10,13 @@ export class PostComment extends BaseModel {
 
 	@PrimaryColumn()
 	userId: number;
-	@ManyToOne((type) => User, (user) => user.comments)
+	@ManyToOne((type) => User, (user) => user.comments, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'userId' })
 	user: User;
 
 	@PrimaryColumn()
 	postId: number;
-	@ManyToOne((type) => Post, (post) => post.comments)
+	@ManyToOne((type) => Post, (post) => post.comments, { onDelete: 'CASCADE' })
 	@JoinColumn({ name: 'postId' })
 	post: User;
 }

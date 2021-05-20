@@ -63,6 +63,23 @@ router.post(
 	})
 );
 
+// [DELETE] /posts
+router.delete(
+	'/:postId',
+	imgUpload.single('img'),
+	asyncHandler(async (req: any, res) => {
+		const post = await Post.findOne(req.params.postId);
+		if (!post) {
+			res.status(404);
+			throw new Error('존재하지 않는 게시물입니다.');
+		}
+
+		const deleted = await Post.remove(post);
+		console.log(deleted);
+		res.json({ success: true });
+	})
+);
+
 // [PUT] /posts/:postId/likes
 router.put(
 	'/:postId/likes',
@@ -91,6 +108,11 @@ router.post(
 			userId: req.user?.id,
 		}).save();
 
+		if (!newComment) {
+			res.status(404);
+			throw new Error('코멘트를 작성하는 데 실패했습니다.');
+		}
+
 		res.json(newComment);
 	})
 );
@@ -100,7 +122,7 @@ router.get(
 	asyncHandler(async (req, res) => {
 		const posts = await Post.find({
 			relations: ['user', 'comments', 'comments.user'],
-			// select: ['user', 'comments'],
+			select: ['user'],
 		});
 
 		res.json(posts);
