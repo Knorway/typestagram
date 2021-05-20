@@ -4,6 +4,7 @@ import { FocusEventHandler, MouseEventHandler, SetStateAction } from 'react';
 interface SectionProps {
 	isLiked: boolean;
 	setIsLiked: SetStateAction<any>;
+	likes: any[];
 }
 interface LikeIconProps {
 	likeHandler?: any;
@@ -50,7 +51,7 @@ export const UnfilledLike = ({ likeHandler, buttonFocusHandler }: LikeIconProps)
 	);
 };
 
-function LikeFollowSection({ isLiked, setIsLiked }: SectionProps) {
+function LikeFollowSection({ isLiked, setIsLiked, likes }: SectionProps) {
 	const likeHandler: MouseEventHandler = (e) => {
 		setIsLiked();
 	};
@@ -78,7 +79,7 @@ function LikeFollowSection({ isLiked, setIsLiked }: SectionProps) {
 			</HStack>
 			<Box>
 				<Text fontSize='14px' fontWeight='600' pb='1'>
-					좋아요 0개
+					좋아요 {likes.length}개
 				</Text>
 			</Box>
 		</>

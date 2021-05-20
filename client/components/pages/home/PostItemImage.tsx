@@ -3,8 +3,12 @@ import { Box, Text } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/skeleton';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import client, { API_URL } from '../../../api';
 import LikeFollowSection, { FilledLike } from './LikeFollowSection';
+import { BearerHeader } from '../../../lib/bearerHeader';
+import useSWR, { mutate } from 'swr';
+import useAuth from '../../../hooks/useAuth';
 
 const LikeOverlay = styled(Box)`
 	transition: all ease-in 0.1s;
@@ -18,14 +22,64 @@ const LikeOverlay = styled(Box)`
 `;
 
 function PostItemImage({ post }) {
-	const [isLiked, setIsLiked] = useState(false);
+	const { data: cachedPosts } = useSWR(`${API_URL}/posts`, {
+		revalidateOnFocus: false,
+		revalidateOnMount: false,
+	});
+	const { user } = useAuth();
+
+	const isLikedPost = useMemo(() => {
+		return post.likes.some((like) => like.userId === user.id);
+	}, []);
+
+	const [isLiked, setIsLiked] = useState(isLikedPost);
 	const [imgLoaded, setImgLoaded] = useState(false);
 	const [likeOverlay, setLikeOverlay] = useState(false);
 
-	const likeToggleHandler = () => {
+	const likeToggleHandler = async () => {
 		if (!isLiked) {
 			setLikeOverlay(true);
+
+			mutate(
+				`${API_URL}/posts`,
+				[...cachedPosts].map((oldPost) =>
+					oldPost.id === post.id
+						? {
+								...oldPost,
+								likes: post.likes.concat({
+									postId: post.id,
+									userId: user.id,
+								}),
+						  }
+						: oldPost
+				),
+				false
+			);
+		} else {
+			mutate(
+				`${API_URL}/posts`,
+				[...cachedPosts].map((oldPost) =>
+					oldPost.id === post.id
+						? {
+								...oldPost,
+								likes: post.likes.filter(
+									(like) => like.userId !== user.id
+								),
+						  }
+						: oldPost
+				),
+				false
+			);
 		}
+
+		try {
+			await client.put(`/posts/${post.id}/likes`, null, {
+				headers: BearerHeader(),
+			});
+		} catch (error) {
+			console.log(error.response.data.message);
+		}
+
 		setIsLiked((prev) => !prev);
 	};
 
@@ -67,7 +121,11 @@ function PostItemImage({ post }) {
 				</LikeOverlay>
 			</Box>
 			<Box px='3' py='2' pb='0'>
-				<LikeFollowSection isLiked={isLiked} setIsLiked={likeToggleHandler} />
+				<LikeFollowSection
+					isLiked={isLiked}
+					setIsLiked={likeToggleHandler}
+					likes={post.likes}
+				/>
 			</Box>
 		</>
 	);

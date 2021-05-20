@@ -7,16 +7,22 @@ import { FieldConfig, Form, Formik, useField } from 'formik';
 import { ChangeEventHandler, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 import { RiSendPlaneFill } from 'react-icons/ri';
-import client from '../../../api';
+import client, { API_URL } from '../../../api';
 import { BearerHeader } from '../../../lib/bearerHeader';
 import AddPostButton from './AddPostButton';
+import useSWR, { mutate } from 'swr';
 
 function AddPost() {
+	const { data: cachedPosts } = useSWR(`${API_URL}/posts`, {
+		revalidateOnFocus: false,
+		revalidateOnMount: false,
+	});
+
 	const [toggled, setToggled] = useState(false);
 	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(undefined);
 	const imgRef = useRef();
 
-	const togglehandler = () => setToggled((prev) => !prev);
+	const toggleHandler = () => setToggled((prev) => !prev);
 
 	const uploadHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
 		const reader = new FileReader();
@@ -39,7 +45,7 @@ function AddPost() {
 
 	return (
 		<Box>
-			<AddPostButton toggled={toggled} setToggled={togglehandler} />
+			<AddPostButton toggled={toggled} setToggled={toggleHandler} />
 			{toggled && (
 				<VStack
 					position='fixed'
@@ -72,14 +78,19 @@ function AddPost() {
 							initialValues={{ description: '', img: null }}
 							onSubmit={async (values) => {
 								const form = new FormData();
-								Object.entries(values).forEach((e) =>
-									form.append(e[0], e[1])
-								);
+								Object.entries(values).forEach((e) => {
+									form.append(e[0], e[1]);
+								});
 
 								const response = await client.post('/posts', form, {
 									headers: BearerHeader(),
 								});
-								console.log(response);
+								mutate(
+									`${API_URL}/posts`,
+									[response.data, ...cachedPosts],
+									false
+								);
+								setToggled(false);
 							}}
 						>
 							{() => (

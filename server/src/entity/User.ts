@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseModel } from './baseModel';
-import { Follow } from './Follow';
+import { Followship } from './junction/Followship';
+import { Like } from './junction/Like';
 import { Post } from './Post';
 
 @Entity()
@@ -20,12 +21,18 @@ export class User extends BaseModel {
 	@Column({ default: 'local' })
 	provider: string;
 
+	// [Post]
 	@OneToMany((type) => Post, (post) => post.user)
 	posts: Post[];
 
-	@OneToMany((type) => Follow, (follow) => follow.follower)
-	followers: Follow[];
+	// [Followship]
+	@OneToMany((type) => Followship, (followship) => followship.follower)
+	followers: Followship[];
 
-	@OneToMany((type) => Follow, (follow) => follow.following)
-	followings: Follow[];
+	@OneToMany((type) => Followship, (followship) => followship.following)
+	followings: Followship[];
+
+	// [Like]
+	@OneToMany((type) => Like, (like) => like.user)
+	likedPosts: Like[];
 }

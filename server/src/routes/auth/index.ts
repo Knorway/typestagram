@@ -8,6 +8,7 @@ import { jwtAuth, passportAuth } from '../../middlewares/authMiddleware';
 
 const router = express();
 
+// [GET] /auth/register
 router.post(
 	'/register',
 	asyncHandler(async (req, res) => {
@@ -26,7 +27,7 @@ router.post(
 	})
 );
 
-// [POST] auth/login
+// [POST] /auth/login
 router.post(
 	'/login',
 	asyncHandler(async (req, res) => {
@@ -59,23 +60,23 @@ router.post(
 	})
 );
 
-// [GET] auth/github
+// [GET] /auth/github
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 router.get('/github/callback', passportAuth('github'));
-// [GET] auth/google
+// [GET] /auth/google
 router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 router.get('/google/callback', passportAuth('google'));
-// [GET] auth/naver
+// [GET] /auth/naver
 router.get('/naver', passport.authenticate('naver'));
 router.get('/naver/callback', passportAuth('naver'));
 
-// [GET] auth/validate
+// [GET] /auth/validate
 router.get(
 	'/validate',
 	jwtAuth,
 	asyncHandler(async (req, res) => {
-		const { email, username, uuid, provider } = req.user!;
-		res.json({ email, username, uuid, provider });
+		const { id, email, username, uuid, provider } = req.user!;
+		res.json({ id, email, username, uuid, provider });
 	})
 );
 

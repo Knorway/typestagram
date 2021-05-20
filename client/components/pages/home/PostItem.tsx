@@ -13,7 +13,6 @@ function PostItem({ post }: PostItemProps) {
 		<Box
 			as='article'
 			display='block'
-			key={post.id}
 			width={['100%', '100%', '614px']}
 			justifySelf='stretch'
 			border='1px'
@@ -26,7 +25,7 @@ function PostItem({ post }: PostItemProps) {
 				<Avatar src='' size='xs' />
 				<Flex justifyContent='space-between' width='100%'>
 					<Text as='p' pl='3' pt='1px' fontWeight='600' color='black'>
-						{post.creator}
+						{post.user.username}
 					</Text>
 					<Box>+</Box>
 				</Flex>
@@ -47,15 +46,15 @@ function PostItem({ post }: PostItemProps) {
 							pr='1'
 							mb='1'
 						>
-							{post.creator}
+							{post.user.username}
 						</Text>
-						{post.title}
+						{post.content}
 					</Text>
 				</Box>
 
 				{/* comments sections */}
 				<UnorderedList ml='0'>
-					{post.comments.map((comment, idx) => (
+					{post.comments?.map((comment, idx) => (
 						<ListItem key={idx} listStyleType='none'>
 							<Text display='inline' fontWeight='600'>
 								{comment.creator}

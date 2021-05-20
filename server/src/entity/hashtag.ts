@@ -1,13 +1,13 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseModel } from './baseModel';
-import { Post } from './Post';
+import { PostHashtag } from './junction/PostHashtag';
 
 @Entity()
 export class Hashtag extends BaseModel {
 	@Column()
 	title: string;
 
-	@ManyToMany((type) => Post)
-	@JoinTable()
-	posts: Post[];
+	// [PoshHashtag]
+	@OneToMany((type) => PostHashtag, (postHashtag) => postHashtag.hashtag)
+	posts: PostHashtag[];
 }

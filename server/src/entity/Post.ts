@@ -1,7 +1,9 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { BaseModel } from './baseModel';
-import { Hashtag } from './hashtag';
+import { Comment } from './Comment';
+import { PostHashtag } from './junction/PostHashtag';
 import { User } from './User';
+import { Like } from '../entity/junction/Like';
 
 @Entity()
 export class Post extends BaseModel {
@@ -11,11 +13,20 @@ export class Post extends BaseModel {
 	@Column({ nullable: true })
 	img: string;
 
+	// [User]
 	@ManyToOne((type) => User, (user) => user.posts)
 	@JoinTable({ name: 'userId' })
 	user: User;
 
-	// @ManyToMany((type) => Hashtag, (hashtag) => hashtag.posts)
-	// @JoinTable()
-	// hashtags: Hashtag[];
+	// [PoshHashtag]
+	@OneToMany((type) => PostHashtag, (postHashtag) => postHashtag.post)
+	hashtags: PostHashtag[];
+
+	// [Comment]
+	@OneToMany((type) => Comment, (comment) => comment.createdBy)
+	comments: Comment[];
+
+	// [Like]
+	@OneToMany((type) => Like, (like) => like.post)
+	likes: Like[];
 }

@@ -12,7 +12,7 @@ export class BaseModel extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({ type: 'uuid' })
+	@Column({ type: 'uuid', unique: true })
 	uuid: string;
 
 	@CreateDateColumn()
