@@ -8,12 +8,11 @@ import { jwtAuth } from '../../middlewares/authMiddleware';
 import { Post } from '../../entity/Post';
 import { Like } from '../../entity/junction/Like';
 import { User } from '../../entity/User';
+import { PostComment } from '../../entity/junction/PostComment';
 
 dotenv.config();
 
 const router = express.Router();
-
-router.use(jwtAuth, (req, res, next) => next());
 
 AWS.config.update({
 	accessKeyId: process.env.AWS_S3_ACCESS_KEY,
@@ -35,16 +34,19 @@ const imgUpload = multer({
 router.get(
 	'/',
 	asyncHandler(async (req, res) => {
-		const posts = await Post.createQueryBuilder('post')
-			.select(['post', 'user.username', 'user.id', 'like.postId', 'like.userId'])
-			.leftJoin('post.user', 'user')
-			.leftJoin('post.likes', 'like')
-			.orderBy('post.createdAt', 'DESC')
-			.getMany();
-
-		res.json(posts);
+		try {
+			const posts = await Post.find({
+				relations: ['user', 'likes', 'comments', 'comments.user'],
+				order: { createdAt: 'DESC' },
+			});
+			res.json(posts);
+		} catch (error) {
+			console.log(error);
+		}
 	})
 );
+
+router.use(jwtAuth, (req, res, next) => next());
 
 // [POST] /posts
 router.post(
@@ -79,22 +81,29 @@ router.put(
 	})
 );
 
-router.delete(
-	'/:postId/likes',
+// [POST] /posts/:postId/comment
+router.post(
+	'/:postId/comment',
 	asyncHandler(async (req, res) => {
-		const likedPost = await Like.findOne({
-			where: { post: await Post.find({ where: { uuid: req.user?.uuid } }) },
-		});
+		const newComment = await PostComment.create({
+			comment: req.body.comment,
+			postId: +req.params.postId,
+			userId: req.user?.id,
+		}).save();
 
-		res.json(likedPost);
+		res.json(newComment);
 	})
 );
 
 router.get(
 	'/test',
 	asyncHandler(async (req, res) => {
-		const likes = await Like.find({ where: { userId: req.user?.id } });
-		res.json(likes);
+		const posts = await Post.find({
+			relations: ['user', 'comments', 'comments.user'],
+			// select: ['user', 'comments'],
+		});
+
+		res.json(posts);
 	})
 );
 

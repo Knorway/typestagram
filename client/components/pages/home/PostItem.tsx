@@ -1,6 +1,10 @@
 import { Avatar } from '@chakra-ui/avatar';
 import { Input } from '@chakra-ui/input';
 import { Box, Flex, ListItem, Text, UnorderedList } from '@chakra-ui/layout';
+import { useState } from 'react';
+import client, { API_URL } from '../../../api';
+import useAuth from '../../../hooks/useAuth';
+import { BearerHeader } from '../../../lib/bearerHeader';
 import PostItemImage from './PostItemImage';
 import { Post } from './PostList';
 
@@ -9,6 +13,12 @@ interface PostItemProps {
 }
 
 function PostItem({ post }: PostItemProps) {
+	const [comment, setComment] = useState('');
+	const { user } = useAuth();
+
+	// console.log(post);
+	// if (!post) return null;
+
 	return (
 		<Box
 			as='article'
@@ -57,10 +67,10 @@ function PostItem({ post }: PostItemProps) {
 					{post.comments?.map((comment, idx) => (
 						<ListItem key={idx} listStyleType='none'>
 							<Text display='inline' fontWeight='600'>
-								{comment.creator}
+								{comment.user.username}
 							</Text>
 							<Text display='inline' pl='1' fontWeight='initial'>
-								{comment.body}
+								{comment.comment}
 							</Text>
 						</ListItem>
 					))}
@@ -76,6 +86,28 @@ function PostItem({ post }: PostItemProps) {
 					_placeholder={{
 						fontSize: '13px',
 						color: 'gray.500',
+					}}
+					onChange={(e) => setComment(e.target.value)}
+					onKeyPress={async (e) => {
+						if (e.key === 'Enter') {
+							try {
+								const response = await client.post(
+									`${API_URL}/posts/${post.id}/comment`,
+									{ comment },
+									{ headers: BearerHeader() }
+								);
+
+								if (response.statusText === 'OK') {
+									post.comments.unshift({
+										user: { username: user.username },
+										comment,
+									});
+									setComment('');
+								}
+							} catch (error) {
+								console.log(error.response.data.message);
+							}
+						}
 					}}
 				/>
 			</Box>

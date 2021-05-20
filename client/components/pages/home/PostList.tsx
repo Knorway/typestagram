@@ -5,10 +5,11 @@ import { BearerHeader } from '../../../lib/bearerHeader';
 import PostItem from './PostItem';
 
 export interface Post {
+	id: number;
 	uuid: string;
 	content: string;
 	img: string;
-	comments: Comment[];
+	comments: any;
 	user: User;
 	likes: any[];
 }
@@ -24,6 +25,8 @@ function PostList() {
 		const response = await axios.get(url, { headers: BearerHeader() });
 		return response.data;
 	});
+
+	console.log('posts', posts);
 
 	return (
 		<>

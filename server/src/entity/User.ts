@@ -3,6 +3,7 @@ import { BaseModel } from './baseModel';
 import { Followship } from './junction/Followship';
 import { Like } from './junction/Like';
 import { Post } from './Post';
+import { PostComment } from './junction/PostComment';
 
 @Entity()
 export class User extends BaseModel {
@@ -35,4 +36,8 @@ export class User extends BaseModel {
 	// [Like]
 	@OneToMany((type) => Like, (like) => like.user)
 	likedPosts: Like[];
+
+	// [PostComment]
+	@OneToMany((type) => PostComment, (comment) => comment.user)
+	comments: PostComment[];
 }

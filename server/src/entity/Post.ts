@@ -1,9 +1,9 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { BaseModel } from './baseModel';
-import { Comment } from './Comment';
 import { PostHashtag } from './junction/PostHashtag';
 import { User } from './User';
 import { Like } from '../entity/junction/Like';
+import { PostComment } from './junction/PostComment';
 
 @Entity()
 export class Post extends BaseModel {
@@ -19,14 +19,16 @@ export class Post extends BaseModel {
 	user: User;
 
 	// [PoshHashtag]
-	@OneToMany((type) => PostHashtag, (postHashtag) => postHashtag.post)
+	@OneToMany((type) => PostHashtag, (postHashtag) => postHashtag.post, {
+		cascade: true,
+	})
 	hashtags: PostHashtag[];
 
-	// [Comment]
-	@OneToMany((type) => Comment, (comment) => comment.createdBy)
-	comments: Comment[];
+	// [PostComment]
+	@OneToMany((type) => PostComment, (comment) => comment.post, { cascade: true })
+	comments: PostComment[];
 
 	// [Like]
-	@OneToMany((type) => Like, (like) => like.post)
+	@OneToMany((type) => Like, (like) => like.post, { cascade: true })
 	likes: Like[];
 }

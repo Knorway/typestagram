@@ -29,7 +29,7 @@ function PostItemImage({ post }) {
 	const { user } = useAuth();
 
 	const isLikedPost = useMemo(() => {
-		return post.likes.some((like) => like.userId === user.id);
+		return post?.likes?.some((like) => like.userId === user.id);
 	}, []);
 
 	const [isLiked, setIsLiked] = useState(isLikedPost);
@@ -40,42 +40,43 @@ function PostItemImage({ post }) {
 		if (!isLiked) {
 			setLikeOverlay(true);
 
-			mutate(
-				`${API_URL}/posts`,
-				[...cachedPosts].map((oldPost) =>
-					oldPost.id === post.id
-						? {
-								...oldPost,
-								likes: post.likes.concat({
-									postId: post.id,
-									userId: user.id,
-								}),
-						  }
-						: oldPost
-				),
-				false
-			);
-		} else {
-			mutate(
-				`${API_URL}/posts`,
-				[...cachedPosts].map((oldPost) =>
-					oldPost.id === post.id
-						? {
-								...oldPost,
-								likes: post.likes.filter(
-									(like) => like.userId !== user.id
-								),
-						  }
-						: oldPost
-				),
-				false
-			);
+			// 	mutate(
+			// 		`${API_URL}/posts`,
+			// 		[...cachedPosts].map((oldPost) =>
+			// 			oldPost.id === post.id
+			// 				? {
+			// 						...oldPost,
+			// 						likes: post.likes.concat({
+			// 							postId: post.id,
+			// 							userId: user.id,
+			// 						}),
+			// 				  }
+			// 				: oldPost
+			// 		),
+			// 		false
+			// 	);
+			// } else {
+			// 	mutate(
+			// 		`${API_URL}/posts`,
+			// 		[...cachedPosts].map((oldPost) =>
+			// 			oldPost.id === post.id
+			// 				? {
+			// 						...oldPost,
+			// 						likes: post.likes.filter(
+			// 							(like) => like.userId !== user.id
+			// 						),
+			// 				  }
+			// 				: oldPost
+			// 		),
+			// 		false
+			// 	);
 		}
 
 		try {
 			await client.put(`/posts/${post.id}/likes`, null, {
 				headers: BearerHeader(),
 			});
+			mutate(`${API_URL}/posts`);
 		} catch (error) {
 			console.log(error.response.data.message);
 		}
@@ -90,6 +91,8 @@ function PostItemImage({ post }) {
 			}, 800);
 		}
 	}, [likeOverlay]);
+
+	if (!post) return null;
 
 	return (
 		<>
