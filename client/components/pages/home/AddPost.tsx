@@ -10,14 +10,9 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import client, { API_URL } from '../../../api';
 import { BearerHeader } from '../../../lib/bearerHeader';
 import AddPostButton from './AddPostButton';
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
 
 function AddPost() {
-	const { data: cachedPosts } = useSWR(`${API_URL}/posts`, {
-		revalidateOnFocus: false,
-		revalidateOnMount: false,
-	});
-
 	const [toggled, setToggled] = useState(false);
 	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(undefined);
 	const imgRef = useRef();
@@ -82,15 +77,15 @@ function AddPost() {
 									form.append(e[0], e[1]);
 								});
 
-								const response = await client.post('/posts', form, {
-									headers: BearerHeader(),
-								});
-								mutate(
-									`${API_URL}/posts`,
-									[response.data, ...cachedPosts],
-									false
-								);
-								setToggled(false);
+								try {
+									await client.post('/posts', form, {
+										headers: BearerHeader(),
+									});
+									mutate(`${API_URL}/posts`);
+									setToggled(false);
+								} catch (error) {
+									console.log(error.response.data.message);
+								}
 							}}
 						>
 							{() => (

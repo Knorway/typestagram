@@ -10,7 +10,7 @@ export class User extends BaseModel {
 	@Column({ unique: true })
 	email: string;
 
-	@Column()
+	@Column({unique: true})
 	username: string;
 
 	@Column({ nullable: true, select: false })

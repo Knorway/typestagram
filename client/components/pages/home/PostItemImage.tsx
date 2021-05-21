@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import client, { API_URL } from '../../../api';
 import LikeFollowSection, { FilledLike } from './LikeFollowSection';
 import { BearerHeader } from '../../../lib/bearerHeader';
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
 import useAuth from '../../../hooks/useAuth';
 
 const LikeOverlay = styled(Box)`
@@ -24,9 +24,10 @@ const LikeOverlay = styled(Box)`
 function PostItemImage({ post }) {
 	const { user } = useAuth();
 
-	const isLikedPost = useMemo(() => {
-		return post?.likes?.some((like) => like.userId === user.id);
-	}, []);
+	const isLikedPost = useMemo(
+		() => post?.likes?.some((like) => like.userId === user.id),
+		[]
+	);
 
 	const [isLiked, setIsLiked] = useState(isLikedPost);
 	const [imgLoaded, setImgLoaded] = useState(false);

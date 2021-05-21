@@ -80,4 +80,19 @@ router.get(
 	})
 );
 
+// [GET] /auth/:userId
+router.get(
+	'/:userId',
+	jwtAuth,
+	asyncHandler(async (req, res) => {
+		const { userId } = req.params;
+		const user = await User.findOne({
+			where: { uuid: userId },
+			relations: ['posts'],
+		});
+		console.log(user);
+		res.json(user);
+	})
+);
+
 export default router;

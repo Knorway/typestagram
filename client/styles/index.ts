@@ -7,6 +7,7 @@ const overrides = extendTheme({
 				fontFamily: 'body',
 				bg: '#fafafa',
 				lineHeight: 'base',
+				overflowY: 'scroll',
 			},
 		}),
 	},

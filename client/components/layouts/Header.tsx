@@ -3,6 +3,7 @@ import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/layout';
 import { setTokenAndMutate } from '../../lib/setTokenAndMutate';
 import NextLink from 'next/link';
 import useAuth from '../../hooks/useAuth';
+import { Avatar } from '@chakra-ui/avatar';
 
 function Header() {
 	const { user } = useAuth();
@@ -18,15 +19,21 @@ function Header() {
 		>
 			<HStack as='header' width='100%' maxWidth='968px' height='3.3rem'>
 				<Box flex='1'>
-					<Heading
-						fontFamily='Dancing Script, system-ui,sans-serif'
-						fontWeight='700'
-						size='lg'
-						mb='8px'
-					>
-						Typestagram
-					</Heading>
+					<NextLink href='/'>
+						<Heading
+							fontFamily='Dancing Script, system-ui,sans-serif'
+							fontWeight='700'
+							size='lg'
+							mb='8px'
+							cursor='pointer'
+							href='/'
+							as='a'
+						>
+							Typestagram
+						</Heading>
+					</NextLink>
 				</Box>
+
 				<Input
 					width='215px'
 					size='sm'
@@ -57,9 +64,11 @@ function Header() {
 					</Box>
 					<Box>
 						{user && (
-							<Text as='pre' color='blue.600' cursor='pointer'>
-								{user.username}
-							</Text>
+							<NextLink href={`/account/${user.uuid}`}>
+								<a>
+									<Avatar size='xs' cursor='pointer' />
+								</a>
+							</NextLink>
 						)}
 					</Box>
 				</HStack>

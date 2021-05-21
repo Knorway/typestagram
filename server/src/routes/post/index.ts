@@ -9,6 +9,7 @@ import { Post } from '../../entity/Post';
 import { Like } from '../../entity/junction/Like';
 import { User } from '../../entity/User';
 import { PostComment } from '../../entity/junction/PostComment';
+import { getRepository } from 'typeorm';
 
 dotenv.config();
 
@@ -35,10 +36,19 @@ router.get(
 	'/',
 	asyncHandler(async (req, res) => {
 		try {
-			const posts = await Post.find({
-				relations: ['user', 'likes', 'comments', 'comments.user'],
-				order: { createdAt: 'DESC' },
-			});
+			const posts = await Post.createQueryBuilder('post')
+				.leftJoinAndSelect('post.comments', 'comments')
+				.leftJoinAndSelect('post.likes', 'likes')
+				.leftJoinAndSelect('post.user', 'user')
+				.leftJoinAndSelect('comments.user', 'commentor')
+				.orderBy('post.createdAt', 'DESC')
+				.getMany();
+
+			if (!posts) {
+				res.status(404);
+				throw new Error('포스트를 불러오는 데 실패했습니다.');
+			}
+
 			res.json(posts);
 		} catch (error) {
 			console.log(error);
@@ -46,6 +56,7 @@ router.get(
 	})
 );
 
+// it needs to be authtenticated to reach endpoints below
 router.use(jwtAuth, (req, res, next) => next());
 
 // [POST] /posts
@@ -58,6 +69,12 @@ router.post(
 			img: req.file.location,
 			user: req.user,
 		}).save();
+
+		if (!post) {
+			res.status(404);
+			throw new Error('포스트를 작성하는 데 실패했습니다.');
+		}
+		console.log(post);
 
 		res.json(post);
 	})
@@ -120,10 +137,13 @@ router.post(
 router.get(
 	'/test',
 	asyncHandler(async (req, res) => {
-		const posts = await Post.find({
-			relations: ['user', 'comments', 'comments.user'],
-			select: ['user'],
-		});
+		const posts = await getRepository(Post)
+			.createQueryBuilder('post')
+			.leftJoinAndSelect('post.comments', 'comments')
+			.leftJoinAndSelect('post.likes', 'likes')
+			.leftJoinAndSelect('comments.user', 'user')
+			.orderBy('post.createdAt', 'DESC')
+			.getMany();
 
 		res.json(posts);
 	})
