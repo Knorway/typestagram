@@ -1,5 +1,5 @@
 import { Img } from '@chakra-ui/image';
-import { Box, Text } from '@chakra-ui/layout';
+import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/skeleton';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -63,12 +63,15 @@ function PostItemImage({ post }) {
 	return (
 		<>
 			<Box position='relative'>
-				<Img
-					src={post.img}
-					alt='post image'
-					onLoad={setImgLoaded.bind(null, true)}
-					onDoubleClick={likeToggleHandler}
-				/>
+				<Flex justifyContent='center' maxH='600px'>
+					<Img
+						src={post.img}
+						alt='post image'
+						onLoad={setImgLoaded.bind(null, true)}
+						onDoubleClick={likeToggleHandler}
+						w='100%'
+					/>
+				</Flex>
 				{!imgLoaded && <Skeleton height={['300px', '600px']} width='100%' />}
 				<LikeOverlay
 					data-liked={likeOverlay}

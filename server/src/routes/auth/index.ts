@@ -75,23 +75,8 @@ router.get(
 	'/validate',
 	jwtAuth,
 	asyncHandler(async (req, res) => {
-		const { id, email, username, uuid, provider } = req.user!;
-		res.json({ id, email, username, uuid, provider });
-	})
-);
-
-// [GET] /auth/:userId
-router.get(
-	'/:userId',
-	jwtAuth,
-	asyncHandler(async (req, res) => {
-		const { userId } = req.params;
-		const user = await User.findOne({
-			where: { uuid: userId },
-			relations: ['posts'],
-		});
-		console.log(user);
-		res.json(user);
+		// const { id, email, username, uuid, provider } = req.user!;
+		res.json(req.user);
 	})
 );
 

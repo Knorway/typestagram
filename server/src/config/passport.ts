@@ -16,6 +16,7 @@ import {
 } from 'passport-google-oauth20';
 import { User } from '../entity/User';
 import { Strategy as naverStategy, StrategyOption as naverOptions } from 'passport-naver';
+import { Followship } from '../entity/junction/Followship';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ const handleOAuthUser = async (done: any, profile: any) => {
 	try {
 		const { email, providerId, username, provider } = profile;
 		const exUser = await User.findOne({ where: { email } });
+		console.log('query');
 
 		if (exUser) {
 			exUser.snsId = providerId;
@@ -71,13 +73,21 @@ const handleOAuthUser = async (done: any, profile: any) => {
 };
 const jwtVerify: jwtVerify = async (payload, done) => {
 	try {
-		const user = await User.findOne({ where: { uuid: payload.id } });
+		const user = await User.createQueryBuilder('user')
+			.where('user.uuid = :uuid', { uuid: payload.id })
+			.getOne();
 
 		if (!user) {
 			throw new Error('존재하지 않는 계정입니다');
 		}
 
-		done(null, user);
+		const followships = await Followship.createQueryBuilder('flsp')
+			.where('flsp.follower = :id', { id: user.id })
+			.orWhere('flsp.following = :id', { id: user.id })
+			.select(['flsp.followerId', 'flsp.followingId', 'flsp.uuid'])
+			.getMany();
+
+		done(null, { ...user, followships });
 	} catch (error) {
 		console.log('jwt error');
 		done(error);

@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
 import { Box, Flex, ListItem, Text, UnorderedList } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuList, MenuItem, MenuDivider } from '@chakra-ui/menu';
-import { KeyboardEventHandler, useState } from 'react';
+import { KeyboardEventHandler, useEffect, useState } from 'react';
 import client, { API_URL } from '../../../api';
 import useAuth from '../../../hooks/useAuth';
 import { BearerHeader } from '../../../lib/bearerHeader';
@@ -11,6 +11,8 @@ import PostItemImage from './PostItemImage';
 import { Post } from './PostList';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { mutate } from 'swr';
+import NextLink from 'next/link';
+import useFetch from '../../../hooks/useFetch';
 
 interface PostItemProps {
 	post: Post;
@@ -18,29 +20,57 @@ interface PostItemProps {
 
 function PostItem({ post }: PostItemProps) {
 	const [comment, setComment] = useState('');
+	const [isFollowing, setIsFollowing] = useState(false);
+
 	const { user } = useAuth();
+	const { fetchData: fetchComment } = useFetch(async () => {
+		const response = await client.post(
+			`${API_URL}/posts/${post.id}/comment`,
+			{ comment },
+			{ headers: BearerHeader() }
+		);
+		return response;
+	});
+	const { fetchData: fetchFlsp } = useFetch(async () => {
+		const response = await client.post(
+			`${API_URL}/users/${post.user.id}/followship`,
+			null,
+			{ headers: BearerHeader() }
+		);
+		return response;
+	});
 
 	const handleAddComment: KeyboardEventHandler<HTMLInputElement> = async (e) => {
 		if (e.key === 'Enter') {
-			try {
-				const response = await client.post(
-					`${API_URL}/posts/${post.id}/comment`,
-					{ comment },
-					{ headers: BearerHeader() }
-				);
-
-				if (response.statusText === 'OK') {
-					post.comments.unshift({
-						user: { username: user.username },
-						comment,
-					});
-					setComment('');
-				}
-			} catch (error) {
-				console.log(error.response.data.message);
-			}
+			await fetchComment();
+			post.comments.unshift({
+				user: { username: user.username },
+				comment,
+			});
+			setComment('');
 		}
 	};
+
+	const toggleFollow = async () => {
+		const response = await fetchFlsp();
+		if (response) {
+			switch (response.status) {
+				case 201:
+					user.followships.push(response.data);
+					break;
+				case 204:
+					user.followships = user.followships.filter(
+						(flsp) => flsp.followingId !== post.user.id
+					);
+					break;
+			}
+			setIsFollowing((prev) => !prev);
+		}
+	};
+
+	useEffect(() => {
+		setIsFollowing(user.followships.some((flsp) => flsp.followerId === user.id));
+	}, []);
 
 	return (
 		<Box
@@ -58,7 +88,9 @@ function PostItem({ post }: PostItemProps) {
 				<Avatar src='' size='xs' />
 				<Flex justifyContent='space-between' width='100%'>
 					<Text as='p' pl='3' pt='1px' fontWeight='600' color='black'>
-						{post.user.username}
+						<NextLink href={`/account/${post.user.uuid}`}>
+							<a>{post.user.username}</a>
+						</NextLink>
 					</Text>
 					<Menu>
 						<Box>
@@ -102,7 +134,15 @@ function PostItem({ post }: PostItemProps) {
 							</MenuList>
 						) : (
 							<MenuList>
-								<MenuItem>팔로우 하기</MenuItem>
+								{isFollowing ? (
+									<MenuItem color='tomato' onClick={toggleFollow}>
+										팔로우 취소
+									</MenuItem>
+								) : (
+									<MenuItem color='blue.600' onClick={toggleFollow}>
+										팔로우 하기
+									</MenuItem>
+								)}
 							</MenuList>
 						)}
 					</Menu>
@@ -154,6 +194,7 @@ function PostItem({ post }: PostItemProps) {
 						fontSize: '13px',
 						color: 'gray.500',
 					}}
+					value={comment}
 					onChange={(e) => setComment(e.target.value)}
 					onKeyPress={handleAddComment}
 				/>

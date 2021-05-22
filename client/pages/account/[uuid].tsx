@@ -1,9 +1,9 @@
 import { Avatar } from '@chakra-ui/avatar';
 import { Button } from '@chakra-ui/button';
 import { Image } from '@chakra-ui/image';
-import { Box, Divider, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Box, Divider, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import useSWR from 'swr';
 import client, { API_URL } from '../../api';
@@ -16,7 +16,7 @@ const ProfilePage = () => {
 
 	const { user } = useAuth();
 	const { data: profileUser } = useSWR(
-		`${API_URL}/auth/${uuid}`,
+		`${API_URL}/users/${uuid}`,
 		async (url) => {
 			const response = await client.get(url, { headers: BearerHeader() });
 			return response.data;
@@ -24,16 +24,26 @@ const ProfilePage = () => {
 		{ revalidateOnFocus: false }
 	);
 
-	console.log(profileUser);
-
-	const splicePosts = useMemo(() => {
-		if (profileUser && profileUser.posts) {
+	const splicedPosts = useMemo(() => {
+		if (profileUser && profileUser.posts.length !== 0) {
 			const posts = profileUser.posts.slice();
 			const result = [];
-			while (posts.length) result.push(posts.splice(0, 3));
+
+			while (posts.length) {
+				result.push(posts.splice(0, 3));
+			}
+
+			const lastLine = result[result.length - 1];
+			while (lastLine.length <= 2) {
+				lastLine.push({ id: Date.now() + lastLine.length });
+			}
+
 			return result;
 		}
 	}, [profileUser]);
+
+	console.log(user, 'user logged in');
+	console.log(profileUser, 'profileUser');
 
 	if (!profileUser || !user) return null;
 
@@ -65,25 +75,42 @@ const ProfilePage = () => {
 								? 0
 								: profileUser.posts.length}
 						</Text>
-						<Text fontWeight='semibold'>팔로워 0</Text>
-						<Text fontWeight='semibold'>팔로우 0</Text>
+						<Text fontWeight='semibold'>
+							팔로우{' '}
+							{
+								profileUser.followships.filter(
+									(flsp) => flsp.followerId === profileUser.id
+								).length
+							}
+						</Text>
+						<Text fontWeight='semibold'>
+							팔로워{' '}
+							{
+								profileUser.followships.filter(
+									(flsp) => flsp.followingId === profileUser.id
+								).length
+							}
+						</Text>
 					</HStack>
 					<Box>자기 소개가 등록되지 않았습니다. 추가해보세요!</Box>
 				</VStack>
 			</HStack>
 			<Divider />
-			<VStack w='100%'>
-				<VStack spacing='8' mt='2rem' w='100%'>
-					{splicePosts.map((line, idx) => (
+			<VStack w='100%' p='2rem' pt='1rem'>
+				<VStack spacing='8' w='100%'>
+					{splicedPosts?.map((line, idx) => (
 						<HStack key={idx} flexWrap='nowrap' w='100%'>
 							{line.map((post) => (
 								<HStack
 									key={post.id}
-									w='300px'
-									h='300px'
-									overflow='hidden'
+									flex='1'
+									h={['auto', 'auto', '300px']}
 								>
-									<Image src={post.img} flex='1' />
+									<Image
+										src={post.img}
+										objectFit='cover'
+										height='100%'
+									/>
 								</HStack>
 							))}
 						</HStack>

@@ -21,12 +21,14 @@ interface User {
 }
 
 function PostList() {
-	const { data: posts } = useSWR(`${API_URL}/posts`, async (url) => {
-		const response = await axios.get(url, { headers: BearerHeader() });
-		return response.data;
-	});
-
-	console.log('posts', posts);
+	const { data: posts } = useSWR(
+		`${API_URL}/posts`,
+		async (url) => {
+			const response = await axios.get(url, { headers: BearerHeader() });
+			return response.data;
+		},
+		{ revalidateOnFocus: false }
+	);
 
 	return (
 		<>

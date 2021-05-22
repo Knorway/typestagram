@@ -10,6 +10,7 @@ import { Like } from '../../entity/junction/Like';
 import { User } from '../../entity/User';
 import { PostComment } from '../../entity/junction/PostComment';
 import { getRepository } from 'typeorm';
+import { Followship } from '../../entity/junction/Followship';
 
 dotenv.config();
 
@@ -74,7 +75,6 @@ router.post(
 			res.status(404);
 			throw new Error('포스트를 작성하는 데 실패했습니다.');
 		}
-		console.log(post);
 
 		res.json(post);
 	})
@@ -91,8 +91,7 @@ router.delete(
 			throw new Error('존재하지 않는 게시물입니다.');
 		}
 
-		const deleted = await Post.remove(post);
-		console.log(deleted);
+		await Post.remove(post);
 		res.json({ success: true });
 	})
 );
@@ -137,15 +136,7 @@ router.post(
 router.get(
 	'/test',
 	asyncHandler(async (req, res) => {
-		const posts = await getRepository(Post)
-			.createQueryBuilder('post')
-			.leftJoinAndSelect('post.comments', 'comments')
-			.leftJoinAndSelect('post.likes', 'likes')
-			.leftJoinAndSelect('comments.user', 'user')
-			.orderBy('post.createdAt', 'DESC')
-			.getMany();
-
-		res.json(posts);
+		res.json({});
 	})
 );
 
