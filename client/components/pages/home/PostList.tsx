@@ -12,6 +12,7 @@ export interface Post {
 	comments: any;
 	user: User;
 	likes: any[];
+	createdAt: string;
 }
 interface Comment {
 	[key: string]: string;

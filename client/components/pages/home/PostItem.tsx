@@ -2,17 +2,20 @@ import { Avatar } from '@chakra-ui/avatar';
 import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
 import { Box, Flex, ListItem, Text, UnorderedList } from '@chakra-ui/layout';
-import { Menu, MenuButton, MenuList, MenuItem, MenuDivider } from '@chakra-ui/menu';
-import { KeyboardEventHandler, useEffect, useState } from 'react';
+import { Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/menu';
+import { useToast } from '@chakra-ui/toast';
+import NextLink from 'next/link';
+import { KeyboardEventHandler, MouseEventHandler, useEffect, useState } from 'react';
+import { FiMoreHorizontal } from 'react-icons/fi';
+import { mutate } from 'swr';
 import client, { API_URL } from '../../../api';
 import useAuth from '../../../hooks/useAuth';
+import useFetch from '../../../hooks/useFetch';
 import { BearerHeader } from '../../../lib/bearerHeader';
 import PostItemImage from './PostItemImage';
 import { Post } from './PostList';
-import { FiMoreHorizontal } from 'react-icons/fi';
-import { mutate } from 'swr';
-import NextLink from 'next/link';
-import useFetch from '../../../hooks/useFetch';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 interface PostItemProps {
 	post: Post;
@@ -21,6 +24,8 @@ interface PostItemProps {
 function PostItem({ post }: PostItemProps) {
 	const [comment, setComment] = useState('');
 	const [isFollowing, setIsFollowing] = useState(false);
+
+	const toast = useToast();
 
 	const { user } = useAuth();
 	const { fetchData: fetchComment } = useFetch(async () => {
@@ -51,17 +56,42 @@ function PostItem({ post }: PostItemProps) {
 		}
 	};
 
+	const deleteHandler: MouseEventHandler<HTMLButtonElement> = async () => {
+		if (window.confirm('정말 포스트를 삭제하시겠습니까?')) {
+			try {
+				await client.delete(`${API_URL}/posts/${post.id}`, {
+					headers: BearerHeader(),
+				});
+				mutate(`${API_URL}/posts`);
+			} catch (error) {
+				console.log(error.response.data.message);
+			}
+		}
+	};
+
 	const toggleFollow = async () => {
 		const response = await fetchFlsp();
 		if (response) {
 			switch (response.status) {
 				case 201:
 					user.followships.push(response.data);
+					toast({
+						title: `${post.user.username}님을 팔로우합니다.`,
+						status: 'success',
+						isClosable: true,
+						duration: 2000,
+					});
 					break;
 				case 204:
 					user.followships = user.followships.filter(
 						(flsp) => flsp.followingId !== post.user.id
 					);
+					toast({
+						title: `이제 ${post.user.username}님을 팔로우 하지 않습니다.`,
+						status: 'info',
+						isClosable: true,
+						duration: 2000,
+					});
 					break;
 			}
 			setIsFollowing((prev) => !prev);
@@ -114,21 +144,7 @@ function PostItem({ post }: PostItemProps) {
 							<MenuList>
 								<MenuItem>수정하기</MenuItem>
 								<MenuDivider />
-								<MenuItem
-									color='tomato'
-									onClick={async () => {
-										try {
-											const response = await client.delete(
-												`${API_URL}/posts/${post.id}`,
-												{ headers: BearerHeader() }
-											);
-											console.log(response);
-											mutate(`${API_URL}/posts`);
-										} catch (error) {
-											console.log(error.response.data.message);
-										}
-									}}
-								>
+								<MenuItem color='tomato' onClick={deleteHandler}>
 									삭제하기
 								</MenuItem>
 							</MenuList>
@@ -154,7 +170,7 @@ function PostItem({ post }: PostItemProps) {
 
 			<Box px='3' py='2' pt='0'>
 				<Box>
-					<Text as='h3'>
+					<Flex justifyContent='space-between'>
 						<Text
 							as='p'
 							fontWeight='600'
@@ -163,10 +179,24 @@ function PostItem({ post }: PostItemProps) {
 							pr='1'
 							mb='1'
 						>
-							{post.user.username}
+							{post.user.username}{' '}
+							<Text display='inline-block' fontWeight='normal'>
+								{post.content}
+							</Text>
 						</Text>
-						{post.content}
-					</Text>
+						<Box>
+							<Text
+								display='inline-block'
+								fontSize='11px'
+								fontWeight='semibold'
+								color='gray.500'
+							>
+								{format(new Date(post.createdAt), 'PPPP', {
+									locale: ko,
+								})}
+							</Text>
+						</Box>
+					</Flex>
 				</Box>
 
 				{/* COMMENTS SECTIONS */}

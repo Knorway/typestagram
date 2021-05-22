@@ -42,7 +42,7 @@ router.get(
 				.leftJoinAndSelect('post.likes', 'likes')
 				.leftJoinAndSelect('post.user', 'user')
 				.leftJoinAndSelect('comments.user', 'commentor')
-				.orderBy('post.createdAt', 'DESC')
+				.orderBy('post.updatedAt', 'DESC')
 				.getMany();
 
 			if (!posts) {

@@ -11,11 +11,14 @@ import client, { API_URL } from '../../../api';
 import { BearerHeader } from '../../../lib/bearerHeader';
 import AddPostButton from './AddPostButton';
 import { mutate } from 'swr';
+import { useToast } from '@chakra-ui/toast';
 
 function AddPost() {
 	const [toggled, setToggled] = useState(false);
 	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(undefined);
 	const imgRef = useRef();
+
+	const toast = useToast();
 
 	const toggleHandler = () => setToggled((prev) => !prev);
 
@@ -83,6 +86,12 @@ function AddPost() {
 									});
 									mutate(`${API_URL}/posts`);
 									setToggled(false);
+									toast({
+										title: '포스트가 등록되었습니다.',
+										status: 'success',
+										isClosable: true,
+										duration: 2000,
+									});
 								} catch (error) {
 									console.log(error.response.data.message);
 								}
