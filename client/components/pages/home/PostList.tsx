@@ -3,7 +3,7 @@ import { memo } from 'react';
 import useSWR from 'swr';
 import { API_URL } from '../../../api';
 import { BearerHeader } from '../../../lib/bearerHeader';
-import PostItem from './PostItem';
+import PostItem from './postItem';
 
 export interface Post {
 	id: number;

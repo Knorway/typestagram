@@ -4,11 +4,11 @@ import { Skeleton } from '@chakra-ui/skeleton';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useEffect, useMemo, useState } from 'react';
-import client, { API_URL } from '../../../api';
+import client, { API_URL } from '../../../../api';
 import LikeFollowSection, { FilledLike } from './LikeFollowSection';
-import { BearerHeader } from '../../../lib/bearerHeader';
+import { BearerHeader } from '../../../../lib/bearerHeader';
 import { mutate } from 'swr';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../../hooks/useAuth';
 
 const LikeOverlay = styled(Box)`
 	transition: all ease-in 0.1s;
