@@ -9,18 +9,15 @@ import { HiOutlinePhotograph } from 'react-icons/hi';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import client, { API_URL } from '../../../api';
 import { BearerHeader } from '../../../lib/bearerHeader';
-import AddPostButton from './AddPostButton';
 import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/toast';
+import { usePostModal } from '../../../hooks/usePostModal';
 
 function AddPost() {
-	const [toggled, setToggled] = useState(false);
 	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(undefined);
+	const { toggled, toggleHandler } = usePostModal();
 	const imgRef = useRef();
-
 	const toast = useToast();
-
-	const toggleHandler = () => setToggled((prev) => !prev);
 
 	const uploadHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
 		const reader = new FileReader();
@@ -43,7 +40,6 @@ function AddPost() {
 
 	return (
 		<Box>
-			<AddPostButton toggled={toggled} setToggled={toggleHandler} />
 			{toggled && (
 				<VStack
 					position='fixed'
@@ -85,7 +81,7 @@ function AddPost() {
 										headers: BearerHeader(),
 									});
 									mutate(`${API_URL}/posts`);
-									setToggled(false);
+									toggleHandler();
 									toast({
 										title: '포스트가 등록되었습니다.',
 										status: 'success',

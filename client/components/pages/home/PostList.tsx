@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { memo } from 'react';
 import useSWR from 'swr';
 import { API_URL } from '../../../api';
 import { BearerHeader } from '../../../lib/bearerHeader';
@@ -40,4 +41,4 @@ function PostList() {
 	);
 }
 
-export default PostList;
+export default memo(PostList);

@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import client, { API_URL } from '../../api';
 import useAuth from '../../hooks/useAuth';
 import { BearerHeader } from '../../lib/bearerHeader';
+import { nanoid } from '@reduxjs/toolkit';
 
 const ProfilePage = () => {
 	const router = useRouter();
@@ -33,40 +34,43 @@ const ProfilePage = () => {
 				result.push(posts.splice(0, 3));
 			}
 
+			// Creating dummy offsets for layout
 			const lastLine = result[result.length - 1];
 			while (lastLine.length <= 2) {
-				lastLine.push({ id: Date.now() + lastLine.length });
+				lastLine.push({ id: nanoid });
 			}
 
 			return result;
 		}
 	}, [profileUser]);
 
-	console.log(user, 'user logged in');
-	console.log(profileUser, 'profileUser');
+	// console.log(user, 'user logged in');
+	// console.log(profileUser, 'profileUser');
 
 	if (!profileUser || !user) return null;
 
 	return (
-		<VStack maxW='967px' w='100%' pt='2rem'>
-			<HStack w='100%' mb='2rem'>
+		<VStack maxW='967px' w='100%' p='2rem'>
+			<HStack w='100%' mb='1rem'>
 				<Box flex='1' display='flex' justifyContent='center' alignItems='center'>
 					<Avatar size='2xl'></Avatar>
 				</Box>
 				<VStack flex='2' alignItems='flex-start'>
-					<HStack>
+					<HStack justifyContent='space-between' w='100%'>
 						<Heading size='xl'>{profileUser.username}</Heading>
-						<Button
-							size='sm'
-							backgroundColor='none'
-							variant='outline'
-							borderColor='gray.200'
-						>
-							프로필 편집
-						</Button>
-						<Box>
-							<IoMdSettings fontSize='1.3rem' cursor='pointer' />
-						</Box>
+						<HStack>
+							<Button
+								size='sm'
+								backgroundColor='none'
+								variant='outline'
+								borderColor='gray.200'
+							>
+								프로필 편집
+							</Button>
+							<Box>
+								<IoMdSettings fontSize='1.3rem' cursor='pointer' />
+							</Box>
+						</HStack>
 					</HStack>
 					<HStack py='0.8rem'>
 						<Text fontWeight='semibold'>
@@ -95,11 +99,17 @@ const ProfilePage = () => {
 					<Box>자기 소개가 등록되지 않았습니다. 추가해보세요!</Box>
 				</VStack>
 			</HStack>
-			<Divider />
-			<VStack w='100%' p='2rem' pt='1rem'>
-				<VStack spacing='8' w='100%'>
+			<VStack w='100%' pt='1rem'>
+				<Divider />
+				<VStack spacing='6' w='100%'>
 					{splicedPosts?.map((line, idx) => (
-						<HStack key={idx} flexWrap='nowrap' w='100%'>
+						<HStack
+							key={idx}
+							flexWrap='nowrap'
+							w='100%'
+							spacing='6'
+							mt='2rem'
+						>
 							{line.map((post) => (
 								<HStack
 									key={post.id}

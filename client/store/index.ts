@@ -6,12 +6,10 @@ import {
 } from '@reduxjs/toolkit';
 import { createWrapper, HYDRATE } from 'next-redux-wrapper';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import loadingSlice from './loading';
-import postSlice from './post';
+import postModalSlice from './PostModal';
 
 const combinedReducer = combineReducers({
-	loading: loadingSlice.reducer,
-	post: postSlice.reducer,
+	postModal: postModalSlice.reducer,
 });
 const rootReducer: Reducer = (state, action) => {
 	switch (action.type) {

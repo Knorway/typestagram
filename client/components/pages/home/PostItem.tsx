@@ -16,6 +16,8 @@ import PostItemImage from './PostItemImage';
 import { Post } from './PostList';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { useAppDispatch } from '../../../store';
+import { postModalActions } from '../../../store/PostModal';
 
 interface PostItemProps {
 	post: Post;
@@ -24,6 +26,9 @@ interface PostItemProps {
 function PostItem({ post }: PostItemProps) {
 	const [comment, setComment] = useState('');
 	const [isFollowing, setIsFollowing] = useState(false);
+
+	const dispatch = useAppDispatch();
+	const toggleHandler = () => dispatch(postModalActions.toggleModal());
 
 	const toast = useToast();
 
@@ -142,7 +147,7 @@ function PostItem({ post }: PostItemProps) {
 						</Box>
 						{user.id === post.user.id ? (
 							<MenuList>
-								<MenuItem>수정하기</MenuItem>
+								<MenuItem onClick={toggleHandler}>수정하기</MenuItem>
 								<MenuDivider />
 								<MenuItem color='tomato' onClick={deleteHandler}>
 									삭제하기
@@ -180,7 +185,7 @@ function PostItem({ post }: PostItemProps) {
 							mb='1'
 						>
 							{post.user.username}{' '}
-							<Text display='inline-block' fontWeight='normal'>
+							<Text as='span' display='inline-block' fontWeight='normal'>
 								{post.content}
 							</Text>
 						</Text>
