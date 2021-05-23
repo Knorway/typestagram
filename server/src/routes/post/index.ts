@@ -96,6 +96,24 @@ router.delete(
 	})
 );
 
+// [PUT] /posts/:postId/edit
+router.put(
+	'/:postId/edit',
+	imgUpload.single('img'),
+	asyncHandler(async (req: any, res) => {
+		const edited = await Post.update(req.params.postId, {
+			content: req.body.description,
+			img: req.file?.location ? req.file?.location : req.body.originalImg,
+		});
+		if (!edited) {
+			res.status(400);
+			throw new Error('포스트를 수정하는 데 실패했습니다.');
+		}
+
+		res.json(edited);
+	})
+);
+
 // [PUT] /posts/:postId/likes
 router.put(
 	'/:postId/likes',

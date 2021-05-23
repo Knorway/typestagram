@@ -20,6 +20,7 @@ function CommentSection({ post }) {
 							display='inline-block'
 							pr='1'
 							mb='1'
+							maxW='80%'
 						>
 							{post.user.username}{' '}
 							<Text as='span' display='inline-block' fontWeight='normal'>
@@ -54,9 +55,9 @@ function CommentSection({ post }) {
 						</ListItem>
 					))}
 				</UnorderedList>
-
-				{/* ADD COMMENTS */}
 			</Box>
+
+			{/* ADD COMMENTS */}
 			<Box>
 				<AddComment post={post} comment={comment} setComment={setComment} />
 			</Box>

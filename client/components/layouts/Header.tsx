@@ -1,9 +1,10 @@
 import { Input } from '@chakra-ui/input';
-import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/layout';
+import { Box, Flex, Heading, HStack } from '@chakra-ui/layout';
 import { setTokenAndMutate } from '../../lib/setTokenAndMutate';
 import NextLink from 'next/link';
 import useAuth from '../../hooks/useAuth';
 import { Avatar } from '@chakra-ui/avatar';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
 
 function Header() {
 	const { user } = useAuth();
@@ -44,23 +45,14 @@ function Header() {
 					_placeholder={{ textAlign: 'center' }}
 				/>
 				<HStack flex='1' justifyContent='flex-end'>
-					<Box>
-						<NextLink href='/register'>
-							<a>회원가입</a>
-						</NextLink>
-					</Box>
-					<Box>
-						<NextLink href='/login'>
-							<a>로그인</a>
-						</NextLink>
-					</Box>
 					<Box
 						cursor='pointer'
 						onClick={() => {
 							setTokenAndMutate('user', null, '/auth/validate');
 						}}
+						mr='0.5rem'
 					>
-						로그아웃
+						<RiLogoutBoxRLine fontSize='1.5rem' color='#4A5568' />
 					</Box>
 					<Box>
 						{user && (

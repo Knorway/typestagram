@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useFetch(fetchFn, callback = null) {
+export default function useFetch(fetchFn) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [data, setData] = useState(null);
@@ -12,9 +12,6 @@ export default function useFetch(fetchFn, callback = null) {
 		try {
 			response = await fetchFn();
 			setData(response);
-			if (callback) {
-				callback(response);
-			}
 		} catch (error) {
 			setError(error);
 		} finally {

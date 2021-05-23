@@ -12,12 +12,18 @@ import { BearerHeader } from '../../../lib/bearerHeader';
 import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/toast';
 import { usePostModal } from '../../../hooks/usePostModal';
+import { useAppDispatch, useAppSelector } from '../../../store';
 
 function AddPost() {
-	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(undefined);
+	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(null);
 	const { toggled, toggleHandler } = usePostModal();
 	const imgRef = useRef();
 	const toast = useToast();
+
+	const editOn = useAppSelector((state) => state.postModal.editOn);
+	const dispatch = useAppDispatch();
+
+	console.log(editOn, 'editOn');
 
 	const uploadHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
 		const reader = new FileReader();
@@ -36,6 +42,9 @@ function AddPost() {
 
 	useEffect(() => {
 		setImageRef(imgRef);
+		if (editOn) {
+			imageRef.current.src = editOn.img;
+		}
 	}, [toggled]);
 
 	return (
@@ -69,15 +78,23 @@ function AddPost() {
 							</Box>
 						</VStack>
 						<Formik
-							initialValues={{ description: '', img: null }}
+							initialValues={{
+								description: editOn ? editOn.content : '',
+								img: null,
+							}}
 							onSubmit={async (values) => {
+								const url = editOn
+									? `/posts/${editOn.id}/edit`
+									: `/posts`;
+								const method = editOn ? 'put' : 'post';
 								const form = new FormData();
 								Object.entries(values).forEach((e) => {
 									form.append(e[0], e[1]);
 								});
+								if (editOn) form.append('originalImg', editOn.img);
 
 								try {
-									await client.post('/posts', form, {
+									await client[method](url, form, {
 										headers: BearerHeader(),
 									});
 									mutate(`${API_URL}/posts`);
@@ -93,21 +110,29 @@ function AddPost() {
 								}
 							}}
 						>
-							{() => (
-								<Flex
-									w='100%'
-									borderTop='1px'
-									borderTopColor='gray.300'
-									alignItems='center'
-									as={Form}
-								>
-									<PostSubmitButton type='submit' name='description' />
-									<PostImgButton
-										uploadHandler={uploadHandler}
-										name='img'
-									/>
-								</Flex>
-							)}
+							{({ values }) => {
+								console.log(values);
+								return (
+									<Flex
+										w='100%'
+										borderTop='1px'
+										borderTopColor='gray.300'
+										alignItems='center'
+										as={Form}
+									>
+										<PostSubmitButton
+											type='submit'
+											name='description'
+											editOn={editOn}
+										/>
+										<PostImgButton
+											uploadHandler={uploadHandler}
+											name='img'
+											editOn={editOn}
+										/>
+									</Flex>
+								);
+							}}
 						</Formik>
 					</VStack>
 				</VStack>
@@ -116,7 +141,7 @@ function AddPost() {
 	);
 }
 
-function PostSubmitButton({ as, ...props }: FieldConfig | InputProps) {
+function PostSubmitButton({ as, ...props }: FieldConfig | InputProps | any) {
 	const [field] = useField({
 		name: props.name,
 		value: props.value,
@@ -131,6 +156,7 @@ function PostSubmitButton({ as, ...props }: FieldConfig | InputProps) {
 				placeholder='포스트는 반드시 사진과 글을 포함해야 합니다'
 				_focus={{ outline: 'none' }}
 				{...field}
+				// onChange 커스텀
 			/>
 			<FormControl w='min-content' pt='2' cursor='pointer'>
 				<FormLabel m='0' mr='8px' htmlFor='imgUploadSubmit'>

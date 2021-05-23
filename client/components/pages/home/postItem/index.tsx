@@ -14,7 +14,6 @@ function PostItem({ post }: PostItemProps) {
 			as='article'
 			display='block'
 			width={['100%', '100%', '614px']}
-			justifySelf='stretch'
 			border='1px'
 			borderColor='gray.300'
 			borderRadius='3px'

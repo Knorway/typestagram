@@ -51,7 +51,6 @@ const handleOAuthUser = async (done: any, profile: any) => {
 	try {
 		const { email, providerId, username, provider } = profile;
 		const exUser = await User.findOne({ where: { email } });
-		console.log('query');
 
 		if (exUser) {
 			exUser.snsId = providerId;

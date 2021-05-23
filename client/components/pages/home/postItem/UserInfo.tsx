@@ -9,7 +9,7 @@ import { BearerHeader } from '../../../../lib/bearerHeader';
 import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/toast';
 import { Button } from '@chakra-ui/button';
-import { useAppDispatch } from '../../../../store';
+import { useAppDispatch, useAppSelector } from '../../../../store';
 import { postModalActions } from '../../../../store/PostModal';
 import useFetch from '../../../../hooks/useFetch';
 import useAuth from '../../../../hooks/useAuth';
@@ -21,7 +21,10 @@ function UserInfo({ post }) {
 	const toast = useToast();
 
 	const dispatch = useAppDispatch();
-	const toggleHandler = () => dispatch(postModalActions.toggleModal());
+	const toggleHandler = () => {
+		dispatch(postModalActions.editOn(post));
+		dispatch(postModalActions.toggleModal());
+	};
 
 	const { fetchData: fetchFlsp } = useFetch(async () => {
 		const response = await client.post(
