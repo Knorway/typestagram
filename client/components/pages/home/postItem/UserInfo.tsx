@@ -74,7 +74,7 @@ function UserInfo({ post }) {
 	return (
 		<Box>
 			<Flex padding='3'>
-				<Avatar src='' size='xs' />
+				<Avatar src={user.avatarUrl} size='xs' />
 				<Flex justifyContent='space-between' width='100%'>
 					<Text as='p' pl='3' pt='1px' fontWeight='600' color='black'>
 						<NextLink href={`/account/${post.user.uuid}`}>

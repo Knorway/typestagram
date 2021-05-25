@@ -6,7 +6,7 @@ import useCheckAuth from '../hooks/useCheckAuth';
 import MainLayout from '../components/layouts/MainLayout';
 import overrides from '../styles';
 import { useRouter } from 'next/router';
-import AccountEditLayout from '../components/pages/account/edit/AccountEditLayout';
+import AccountEditLayout from '../components/layouts/AccountEditLayout';
 
 function Application({ Component, pageProps }: AppProps) {
 	const router = useRouter();

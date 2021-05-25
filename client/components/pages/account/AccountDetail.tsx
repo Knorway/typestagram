@@ -51,7 +51,7 @@ const AccountDetail = () => {
 		<VStack maxW='967px' w='100%' p='2rem'>
 			<HStack w='100%' mb='1rem'>
 				<Box flex='1' display='flex' justifyContent='center' alignItems='center'>
-					<Avatar size='2xl'></Avatar>
+					<Avatar size='2xl' src={user.avatarUrl}></Avatar>
 				</Box>
 				<VStack flex='2' alignItems='flex-start'>
 					<HStack justifyContent='space-between' w='100%'>

@@ -58,7 +58,11 @@ function Header() {
 						{user && (
 							<NextLink href={`/account/${user.uuid}`}>
 								<a>
-									<Avatar size='xs' cursor='pointer' />
+									<Avatar
+										size='xs'
+										cursor='pointer'
+										src={user.avatarUrl}
+									/>
 								</a>
 							</NextLink>
 						)}

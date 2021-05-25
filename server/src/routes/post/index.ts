@@ -1,16 +1,13 @@
-import express from 'express';
-import multer from 'multer';
-import asyncHandler from 'express-async-handler';
 import AWS from 'aws-sdk';
-import multerS3 from 'multer-s3';
 import dotenv from 'dotenv';
-import { jwtAuth } from '../../middlewares/authMiddleware';
-import { Post } from '../../entity/Post';
+import express from 'express';
+import asyncHandler from 'express-async-handler';
+import multer from 'multer';
+import multerS3 from 'multer-s3';
 import { Like } from '../../entity/junction/Like';
-import { User } from '../../entity/User';
 import { PostComment } from '../../entity/junction/PostComment';
-import { getRepository } from 'typeorm';
-import { Followship } from '../../entity/junction/Followship';
+import { Post } from '../../entity/Post';
+import { jwtAuth } from '../../middlewares/authMiddleware';
 
 dotenv.config();
 
@@ -22,7 +19,7 @@ AWS.config.update({
 	region: 'ap-northeast-2',
 });
 
-const imgUpload = multer({
+export const imgUpload = multer({
 	storage: multerS3({
 		s3: new AWS.S3(),
 		bucket: 'typestagram',

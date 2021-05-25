@@ -16,6 +16,9 @@ export class User extends BaseModel {
 	@Column({ nullable: true })
 	userInfo: string;
 
+	@Column({ nullable: true })
+	avatarUrl: string;
+
 	@Column({ nullable: true, select: false })
 	password: string;
 

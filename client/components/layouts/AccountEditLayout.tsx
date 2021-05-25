@@ -1,10 +1,10 @@
 import { HStack, UnorderedList, VStack } from '@chakra-ui/layout';
 import React, { ReactNode, useState } from 'react';
-import useAuth from '../../../../hooks/useAuth';
-import AccountCategory from './AccountCategory';
+import useAuth from '../../hooks/useAuth';
+import AccountCategory from '../pages/account/edit/AccountCategory';
 
 export const categoryList = ['프로필 편집', '비밀번호 변경'];
-export const categoryMapper = (category, userId) => {
+export const categoryMapper = (category: string, userId: string) => {
 	switch (category) {
 		case '프로필 편집':
 			return { category, link: `/account/${userId}/edit` };

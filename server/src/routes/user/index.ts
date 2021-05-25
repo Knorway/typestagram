@@ -4,6 +4,7 @@ import { Followship } from '../../entity/junction/Followship';
 import { User } from '../../entity/User';
 import { jwtAuth } from '../../middlewares/authMiddleware';
 import bcrypt from 'bcryptjs';
+import { imgUpload } from '../../config/multer';
 
 const router = express.Router();
 
@@ -38,7 +39,10 @@ router.get(
 // [PUT] /users/:userId
 router.put(
 	'/:userId',
-	asyncHandler(async (req, res) => {
+	imgUpload.single('avatarUrl'),
+	asyncHandler(async (req: any, res) => {
+		console.log(req.file.location);
+		console.log(req.body);
 		const nameExists = await User.findOne({ where: { username: req.body.username } });
 		if (nameExists && nameExists.username !== req.user?.username) {
 			res.status(400);
@@ -48,6 +52,7 @@ router.put(
 		const edited = await User.update(req.user?.id!, {
 			username: req.body.username,
 			userInfo: req.body.userInfo,
+			avatarUrl: req.file.location,
 		});
 		if (!edited) {
 			res.status(400);

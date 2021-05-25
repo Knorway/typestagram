@@ -19,9 +19,11 @@ function AccountDetailPassword() {
 		<VStack p='1.5rem' w='100%'>
 			<HStack w='100%' justifyContent='center' mb='2rem'>
 				<Box>
-					<Avatar mr='1rem' />
+					<Avatar size='lg' mr='1rem' src={user.avatarUrl} />
 				</Box>
-				<Text>{user.username}</Text>
+				<Text fontSize='2xl' fontWeight='600'>
+					{user.username}
+				</Text>
 			</HStack>
 			<Formik
 				initialValues={{ password: '', newPassword: '', newPasswordConfirm: '' }}
