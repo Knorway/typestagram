@@ -1,11 +1,34 @@
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Box, Flex, ListItem, Text, UnorderedList } from '@chakra-ui/layout';
+import { Box, Flex, HStack, ListItem, Text, UnorderedList } from '@chakra-ui/layout';
 import AddComment from './AddComment';
 import { useState } from 'react';
+import { TiDelete } from 'react-icons/ti';
+import useAuth from '../../../../hooks/useAuth';
+import client, { API_URL } from '../../../../api';
+import { BearerHeader } from '../../../../lib/bearerHeader';
+import { mutate } from 'swr';
 
 function CommentSection({ post }) {
 	const [comment, setComment] = useState('');
+	const { user } = useAuth();
+
+	console.log(post.comments);
+	console.log(user.id);
+
+	const handleDeleteComment = async (commentId) => {
+		if (window.confirm('정말로 코멘트를 삭제하시겠습니까?')) {
+			try {
+				await client.delete(`${API_URL}/posts/${post.id}/comment/${commentId}`, {
+					headers: BearerHeader(),
+				});
+
+				mutate(`${API_URL}/posts`);
+			} catch (error) {
+				console.log(error.response.data.message);
+			}
+		}
+	};
 
 	return (
 		<>
@@ -45,14 +68,30 @@ function CommentSection({ post }) {
 				{/* COMMENTS FROM OTHER USERS*/}
 				<UnorderedList ml='0'>
 					{post.comments?.map((comment, idx) => (
-						<ListItem key={idx} listStyleType='none'>
-							<Text display='inline' fontWeight='600'>
-								{comment.user.username}
-							</Text>
-							<Text display='inline' pl='1' fontWeight='initial'>
-								{comment.comment}
-							</Text>
-						</ListItem>
+						<HStack key={idx} justifyContent='space-bewteen'>
+							<Box w='100%'>
+								<ListItem listStyleType='none'>
+									<Text display='inline' fontWeight='600'>
+										{comment.user.username}
+									</Text>
+									<Text display='inline' pl='1' fontWeight='initial'>
+										{comment.comment}
+									</Text>
+								</ListItem>
+							</Box>
+							<Box>
+								<Text>
+									{comment.user.id === user.id && (
+										<TiDelete
+											cursor='pointer'
+											onClick={() =>
+												handleDeleteComment(comment.id)
+											}
+										/>
+									)}
+								</Text>
+							</Box>
+						</HStack>
 					))}
 				</UnorderedList>
 			</Box>

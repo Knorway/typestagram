@@ -146,8 +146,26 @@ router.post(
 			res.status(404);
 			throw new Error('코멘트를 작성하는 데 실패했습니다.');
 		}
+		console.log(newComment);
 
 		res.json(newComment);
+	})
+);
+
+// [DELETE] /posts/:postId/comment
+router.delete(
+	'/:postId/comment/:commentId',
+	asyncHandler(async (req, res) => {
+		const deleted = await PostComment.findOne({
+			where: { id: req.params.commentId },
+		});
+		if (!deleted) {
+			res.status(400);
+			throw new Error('코멘트를 삭제하는 데 실패했습니다.');
+		}
+
+		await PostComment.remove(deleted);
+		res.json(deleted);
 	})
 );
 

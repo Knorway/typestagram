@@ -11,14 +11,18 @@ function AddComment({ post, comment, setComment }) {
 
 	const handleAddComment: KeyboardEventHandler<HTMLInputElement> = async (e) => {
 		if (e.key === 'Enter') {
-			await fetchComment();
+			const response = await fetchComment();
 			post.comments.unshift({
-				user: { username: user.username },
-				comment,
+				user: {
+					id: user.id,
+					username: user.username,
+				},
+				...response.data,
 			});
 			setComment('');
 		}
 	};
+
 	const { fetchData: fetchComment } = useFetch(async () => {
 		const response = await client.post(
 			`${API_URL}/posts/${post.id}/comment`,
@@ -27,8 +31,6 @@ function AddComment({ post, comment, setComment }) {
 		);
 		return response;
 	});
-
-	console.log('object');
 
 	return (
 		<Box borderTop='1px' borderColor='gray.300'>

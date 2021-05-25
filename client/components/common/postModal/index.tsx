@@ -12,7 +12,7 @@ import { BearerHeader } from '../../../lib/bearerHeader';
 import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/toast';
 import { usePostModal } from '../../../hooks/usePostModal';
-import { useAppDispatch, useAppSelector } from '../../../store';
+import { useAppSelector } from '../../../store';
 
 function AddPost() {
 	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(null);
@@ -21,9 +21,6 @@ function AddPost() {
 	const toast = useToast();
 
 	const editOn = useAppSelector((state) => state.postModal.editOn);
-	const dispatch = useAppDispatch();
-
-	console.log(editOn, 'editOn');
 
 	const uploadHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
 		const reader = new FileReader();
@@ -67,16 +64,15 @@ function AddPost() {
 						h='96%'
 						justifyContent='space-between'
 					>
-						<VStack w='100%'>
-							<Box>
-								<Image
-									w='100%'
-									maxHeight={['350px', '600px']}
-									ref={imgRef}
-									objectFit='cover'
-								/>
-							</Box>
-						</VStack>
+						<Box w='100%'>
+							<Image
+								w='100%'
+								h='100%'
+								maxHeight={['350px', '600px']}
+								ref={imgRef}
+								objectFit='cover'
+							/>
+						</Box>
 						<Formik
 							initialValues={{
 								description: editOn ? editOn.content : '',
@@ -110,29 +106,26 @@ function AddPost() {
 								}
 							}}
 						>
-							{({ values }) => {
-								console.log(values);
-								return (
-									<Flex
-										w='100%'
-										borderTop='1px'
-										borderTopColor='gray.300'
-										alignItems='center'
-										as={Form}
-									>
-										<PostSubmitButton
-											type='submit'
-											name='description'
-											editOn={editOn}
-										/>
-										<PostImgButton
-											uploadHandler={uploadHandler}
-											name='img'
-											editOn={editOn}
-										/>
-									</Flex>
-								);
-							}}
+							{() => (
+								<Flex
+									w='100%'
+									borderTop='1px'
+									borderTopColor='gray.300'
+									alignItems='center'
+									as={Form}
+								>
+									<PostSubmitButton
+										type='submit'
+										name='description'
+										editOn={editOn}
+									/>
+									<PostImgButton
+										uploadHandler={uploadHandler}
+										name='img'
+										editOn={editOn}
+									/>
+								</Flex>
+							)}
 						</Formik>
 					</VStack>
 				</VStack>
@@ -156,7 +149,6 @@ function PostSubmitButton({ as, ...props }: FieldConfig | InputProps | any) {
 				placeholder='포스트는 반드시 사진과 글을 포함해야 합니다'
 				_focus={{ outline: 'none' }}
 				{...field}
-				// onChange 커스텀
 			/>
 			<FormControl w='min-content' pt='2' cursor='pointer'>
 				<FormLabel m='0' mr='8px' htmlFor='imgUploadSubmit'>

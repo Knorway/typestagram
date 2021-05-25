@@ -4,15 +4,15 @@ import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/menu';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { MouseEventHandler, useEffect, useState } from 'react';
-import client, { API_URL } from '../../../../api';
-import { BearerHeader } from '../../../../lib/bearerHeader';
 import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/toast';
 import { Button } from '@chakra-ui/button';
-import { useAppDispatch, useAppSelector } from '../../../../store';
+import { useAppDispatch } from '../../../../store';
 import { postModalActions } from '../../../../store/PostModal';
 import useFetch from '../../../../hooks/useFetch';
 import useAuth from '../../../../hooks/useAuth';
+import { deletePost, makeFollowship } from '../../../../api/post';
+import { API_URL } from '../../../../api';
 
 function UserInfo({ post }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -26,24 +26,14 @@ function UserInfo({ post }) {
 		dispatch(postModalActions.toggleModal());
 	};
 
-	const { fetchData: fetchFlsp } = useFetch(async () => {
-		const response = await client.post(
-			`${API_URL}/users/${post.user.id}/followship`,
-			null,
-			{ headers: BearerHeader() }
-		);
-		return response;
-	});
+	const { fetchData: fetchFlsp } = useFetch(makeFollowship(post));
+	const { fetchData: fetchDeletePost } = useFetch(deletePost(post));
 
 	const deleteHandler: MouseEventHandler<HTMLButtonElement> = async () => {
 		if (window.confirm('정말 포스트를 삭제하시겠습니까?')) {
-			try {
-				await client.delete(`${API_URL}/posts/${post.id}`, {
-					headers: BearerHeader(),
-				});
+			const response = await fetchDeletePost();
+			if (response) {
 				mutate(`${API_URL}/posts`);
-			} catch (error) {
-				console.log(error.response.data.message);
 			}
 		}
 	};
