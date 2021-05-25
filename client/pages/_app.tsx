@@ -5,8 +5,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import useCheckAuth from '../hooks/useCheckAuth';
 import MainLayout from '../components/layouts/MainLayout';
 import overrides from '../styles';
+import { useRouter } from 'next/router';
+import AccountEditLayout from '../components/pages/account/edit/AccountEditLayout';
 
 function Application({ Component, pageProps }: AppProps) {
+	const router = useRouter();
+
 	useCheckAuth();
 
 	return (
@@ -15,7 +19,14 @@ function Application({ Component, pageProps }: AppProps) {
 				<title>Typestagram</title>
 			</Head>
 			<MainLayout>
-				<Component {...pageProps} />
+				{router.pathname.startsWith('/account/[uuid]/edit') ? (
+					<AccountEditLayout>
+						<Component {...pageProps} />
+					</AccountEditLayout>
+				) : (
+					// [Default Layout]
+					<Component {...pageProps} />
+				)}
 			</MainLayout>
 		</ChakraProvider>
 	);

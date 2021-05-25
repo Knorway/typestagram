@@ -10,3 +10,12 @@ export const deletePost = (post: any) => async () =>
 	await client.delete(`/posts/${post.id}`, {
 		headers: BearerHeader(),
 	});
+
+export const createComment = (post: any, comment: any) => async () => {
+	const response = await client.post(
+		`/posts/${post.id}/comment`,
+		{ comment },
+		{ headers: BearerHeader() }
+	);
+	return response;
+};

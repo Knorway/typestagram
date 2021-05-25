@@ -6,12 +6,13 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import useSWR from 'swr';
-import client, { API_URL } from '../../api';
-import useAuth from '../../hooks/useAuth';
-import { BearerHeader } from '../../lib/bearerHeader';
+import client, { API_URL } from '../../../api';
+import useAuth from '../../../hooks/useAuth';
+import { BearerHeader } from '../../../lib/bearerHeader';
 import { nanoid } from '@reduxjs/toolkit';
+import NextLink from 'next/link';
 
-const ProfilePage = () => {
+const AccountDetail = () => {
 	const router = useRouter();
 	const { uuid } = router.query;
 
@@ -36,16 +37,13 @@ const ProfilePage = () => {
 
 			// Creating dummy offsets for layout
 			const lastLine = result[result.length - 1];
-			while (lastLine.length <= 2) {
+			while (lastLine.length < 3) {
 				lastLine.push({ id: nanoid });
 			}
 
 			return result;
 		}
 	}, [profileUser]);
-
-	// console.log(user, 'user logged in');
-	// console.log(profileUser, 'profileUser');
 
 	if (!profileUser || !user) return null;
 
@@ -59,14 +57,16 @@ const ProfilePage = () => {
 					<HStack justifyContent='space-between' w='100%'>
 						<Heading size='xl'>{profileUser.username}</Heading>
 						<HStack>
-							<Button
-								size='sm'
-								backgroundColor='none'
-								variant='outline'
-								borderColor='gray.200'
-							>
-								프로필 편집
-							</Button>
+							<NextLink href={`/account/${user.uuid}/edit`}>
+								<Button
+									size='sm'
+									backgroundColor='none'
+									variant='outline'
+									borderColor='gray.200'
+								>
+									프로필 편집
+								</Button>
+							</NextLink>
 							<Box>
 								<IoMdSettings fontSize='1.3rem' cursor='pointer' />
 							</Box>
@@ -96,7 +96,11 @@ const ProfilePage = () => {
 							}
 						</Text>
 					</HStack>
-					<Box>자기 소개가 등록되지 않았습니다. 추가해보세요!</Box>
+					<Box>
+						{user.userInfo
+							? user.userInfo
+							: '자기 소개가 등록되지 않았습니다. 추가해보세요!'}
+					</Box>
 				</VStack>
 			</HStack>
 			<VStack w='100%' pt='1rem'>
@@ -131,4 +135,4 @@ const ProfilePage = () => {
 	);
 };
 
-export default ProfilePage;
+export default AccountDetail;

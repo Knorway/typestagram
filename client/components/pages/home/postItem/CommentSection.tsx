@@ -13,16 +13,12 @@ function CommentSection({ post }) {
 	const [comment, setComment] = useState('');
 	const { user } = useAuth();
 
-	console.log(post.comments);
-	console.log(user.id);
-
 	const handleDeleteComment = async (commentId) => {
 		if (window.confirm('정말로 코멘트를 삭제하시겠습니까?')) {
 			try {
 				await client.delete(`${API_URL}/posts/${post.id}/comment/${commentId}`, {
 					headers: BearerHeader(),
 				});
-
 				mutate(`${API_URL}/posts`);
 			} catch (error) {
 				console.log(error.response.data.message);
