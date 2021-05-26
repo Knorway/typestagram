@@ -10,7 +10,6 @@ import AccountEditLayout from '../components/layouts/AccountEditLayout';
 
 function Application({ Component, pageProps }: AppProps) {
 	const router = useRouter();
-
 	useCheckAuth();
 
 	return (
@@ -24,7 +23,7 @@ function Application({ Component, pageProps }: AppProps) {
 						<Component {...pageProps} />
 					</AccountEditLayout>
 				) : (
-					// [Default Layout]
+					// [Global Layout]
 					<Component {...pageProps} />
 				)}
 			</MainLayout>

@@ -1,9 +1,7 @@
-import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import multer from 'multer';
-import multerS3 from 'multer-s3';
+import { imgUpload } from '../../config/multer';
 import { Like } from '../../entity/junction/Like';
 import { PostComment } from '../../entity/junction/PostComment';
 import { Post } from '../../entity/Post';
@@ -12,22 +10,6 @@ import { jwtAuth } from '../../middlewares/authMiddleware';
 dotenv.config();
 
 const router = express.Router();
-
-AWS.config.update({
-	accessKeyId: process.env.AWS_S3_ACCESS_KEY,
-	secretAccessKey: process.env.AWS_S3_SECRET_KEY,
-	region: 'ap-northeast-2',
-});
-
-export const imgUpload = multer({
-	storage: multerS3({
-		s3: new AWS.S3(),
-		bucket: 'typestagram',
-		key(req, file, callback) {
-			callback(null, `${req.user?.uuid}/${Date.now()}_${file.originalname}`);
-		},
-	}),
-});
 
 // [GET] /posts
 router.get(
@@ -56,6 +38,45 @@ router.get(
 
 // it needs to be authtenticated to reach endpoints below
 router.use(jwtAuth, (req, res, next) => next());
+
+// [GET] /posts/search
+router.get(
+	'/search',
+	asyncHandler(async (req, res) => {
+		const { content } = req.query;
+		const Posts = await Post.createQueryBuilder('post')
+			.where('post.content LIKE :content', { content: `%${content}%` })
+			.leftJoinAndSelect('post.comments', 'comments')
+			.leftJoinAndSelect('post.likes', 'likes')
+			.leftJoinAndSelect('post.user', 'user')
+			.leftJoinAndSelect('comments.user', 'commentor')
+			.orderBy('post.updatedAt', 'DESC')
+			.getMany();
+
+		if (!Posts) {
+			res.status(404);
+			throw new Error('검색결과가 존재하지 않습니다.');
+		}
+
+		res.json(Posts);
+	})
+);
+
+// [GET] /posts/:postId
+router.get(
+	'/:postId',
+	asyncHandler(async (req, res) => {
+		const { postId } = req.params;
+		const post = await Post.findOne({ where: { uuid: postId }, relations: ['user'] });
+
+		if (!post) {
+			res.status(404);
+			throw new Error('존재하지 않는 포스트입니다.');
+		}
+
+		res.json(post);
+	})
+);
 
 // [POST] /posts
 router.post(

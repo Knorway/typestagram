@@ -15,7 +15,6 @@ import NextLink from 'next/link';
 const AccountDetail = () => {
 	const router = useRouter();
 	const { uuid } = router.query;
-
 	const { user } = useAuth();
 	const { data: profileUser } = useSWR(
 		`${API_URL}/users/${uuid}`,
@@ -51,7 +50,7 @@ const AccountDetail = () => {
 		<VStack maxW='967px' w='100%' p='2rem'>
 			<HStack w='100%' mb='1rem'>
 				<Box flex='1' display='flex' justifyContent='center' alignItems='center'>
-					<Avatar size='2xl' src={user.avatarUrl}></Avatar>
+					<Avatar size='2xl' src={profileUser.avatarUrl}></Avatar>
 				</Box>
 				<VStack flex='2' alignItems='flex-start'>
 					<HStack justifyContent='space-between' w='100%'>
@@ -119,6 +118,10 @@ const AccountDetail = () => {
 									key={post.id}
 									flex='1'
 									h={['auto', 'auto', '300px']}
+									cursor='pointer'
+									onClick={() => {
+										router.push(`/posts/${post.uuid}`);
+									}}
 								>
 									<Image
 										src={post.img}

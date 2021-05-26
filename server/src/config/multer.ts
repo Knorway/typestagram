@@ -1,6 +1,9 @@
 import AWS from 'aws-sdk';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 AWS.config.update({
 	accessKeyId: process.env.AWS_S3_ACCESS_KEY,

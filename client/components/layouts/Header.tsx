@@ -5,9 +5,11 @@ import NextLink from 'next/link';
 import useAuth from '../../hooks/useAuth';
 import { Avatar } from '@chakra-ui/avatar';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
+import { useRouter } from 'next/router';
 
 function Header() {
 	const { user } = useAuth();
+	const router = useRouter();
 
 	return (
 		<Flex
@@ -43,6 +45,12 @@ function Header() {
 					bg='#fafafa'
 					placeholder='검색'
 					_placeholder={{ textAlign: 'center' }}
+					onKeyPress={(e) => {
+						if (e.key === 'Enter') {
+							console.log(e.currentTarget.value);
+							router.push(`/posts?content=${e.currentTarget.value}`);
+						}
+					}}
 				/>
 				<HStack flex='1' justifyContent='flex-end'>
 					<Box

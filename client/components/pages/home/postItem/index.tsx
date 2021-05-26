@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/layout';
 import { Post } from '../PostList';
 import CommentSection from './CommentSection';
 import PostItemImage from './PostItemImage';
-import UserInfo from './userInfo';
+import UserInfo from './UserInfo';
 
 interface PostItemProps {
 	post: Post;
