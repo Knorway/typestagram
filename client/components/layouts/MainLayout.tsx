@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { allowed } from '../../hooks/useCheckAuth';
 import { matchPathname } from '../../lib/matchPathname';
-import Header from './Header';
+import Header from './header';
 
 interface MainLayoutProps {
 	children: ReactNode;

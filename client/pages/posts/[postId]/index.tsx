@@ -1,4 +1,4 @@
-import { Text, VStack } from '@chakra-ui/layout';
+import { VStack } from '@chakra-ui/layout';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import client from '../../../api';
@@ -24,7 +24,6 @@ function PostById() {
 		<VStack>
 			<PostItem post={post} key={post.uuid} />
 		</VStack>
-		// null
 	);
 }
 

@@ -37,7 +37,7 @@ const AccountDetail = () => {
 			// Creating dummy offsets for layout
 			const lastLine = result[result.length - 1];
 			while (lastLine.length < 3) {
-				lastLine.push({ id: nanoid });
+				lastLine.push({ id: nanoid() });
 			}
 
 			return result;

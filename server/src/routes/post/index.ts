@@ -62,6 +62,22 @@ router.get(
 	})
 );
 
+// [GET] /posts/search/instant
+router.get(
+	'/search/instant',
+	asyncHandler(async (req, res) => {
+		const { content } = req.query;
+
+		const results = await Post.createQueryBuilder('post')
+			.where('post.content LIKE :content', { content: `%${content}%` })
+			.leftJoin('post.user', 'user')
+			.select(['post.uuid', 'post.content', 'post.img', 'user.username'])
+			.getMany();
+
+		res.json(results);
+	})
+);
+
 // [GET] /posts/:postId
 router.get(
 	'/:postId',
