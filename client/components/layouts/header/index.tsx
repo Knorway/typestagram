@@ -31,11 +31,8 @@ function Header() {
 				);
 				setInstantData(response.data);
 				setIsLoadingData(false);
-				console.log(response.data);
 			}
-			if (!keyword) {
-				setInstantData(null);
-			}
+			if (!keyword) setInstantData(null);
 			setIsLoadingData(false);
 		}, 300),
 		[]
@@ -46,8 +43,6 @@ function Header() {
 			setInstantData(null);
 		};
 	}, [location.pathname]);
-
-	console.log(mouseEnter, 'mouseEnter');
 
 	return (
 		<Flex
@@ -87,9 +82,8 @@ function Header() {
 							placeholder='검색'
 							_placeholder={{ textAlign: 'center' }}
 							onChange={(e) => {
-								if (e.target.value) {
-									instantSearch(e);
-								}
+								if (e.target.value) setIsLoadingData(true);
+								instantSearch(e);
 							}}
 							onKeyPress={(e) => {
 								if (e.key === 'Enter') {
@@ -102,6 +96,7 @@ function Header() {
 							onFocus={(e) => {
 								if (e.target.value) {
 									instantSearch(e);
+									setIsLoadingData(true);
 								}
 							}}
 							onBlur={() => {
@@ -130,7 +125,8 @@ function Header() {
 							borderColor='gray.200'
 							borderRadius='4px'
 							p='3px'
-							overflow='hidden'
+							maxH='550px'
+							overflowY='auto'
 							alignItems='self-start'
 							zIndex='19'
 							onMouseEnter={() => setMouseEnter(true)}
@@ -139,15 +135,19 @@ function Header() {
 							{instantData?.map((post) => (
 								<Box
 									key={post.uuid}
-									display='flex'
 									cursor='pointer'
 									onClick={() => {
 										router.push(`/posts/${post.uuid}`);
 									}}
 								>
-									<Image src={post.img} w='40px' h='40px' />
-									<Flex w='100%' alignItems='center' p='6px'>
-										<Text fontSize='14px' fontWeight='600'>
+									<Image src={post.img} />
+									<Flex w='100%' alignItems='center'>
+										<Text
+											fontSize='13px'
+											fontWeight='600'
+											pl='3px'
+											pt='3px'
+										>
 											{post.user.username}
 										</Text>
 										<Box fontSize='12px' ml='5px' pt='4px'>

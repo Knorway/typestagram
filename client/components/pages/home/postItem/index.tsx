@@ -9,6 +9,7 @@ interface PostItemProps {
 }
 
 function PostItem({ post }: PostItemProps) {
+	console.log('object');
 	return (
 		<Box
 			as='article'

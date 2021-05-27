@@ -3,7 +3,6 @@ export const debounce = (callback: CallableFunction, delay: number) => {
 
 	return (...args: any) => {
 		if (timeout) clearTimeout(timeout);
-
 		timeout = setTimeout(() => {
 			callback(...args);
 			if (timeout) clearTimeout(timeout);

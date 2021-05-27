@@ -15,13 +15,17 @@ const router = express.Router();
 router.get(
 	'/',
 	asyncHandler(async (req, res) => {
+		const { lastId, limit } = req.query;
+
 		try {
 			const posts = await Post.createQueryBuilder('post')
+				.where(lastId ? 'post.id < :lastId' : '', { lastId })
 				.leftJoinAndSelect('post.comments', 'comments')
 				.leftJoinAndSelect('post.likes', 'likes')
 				.leftJoinAndSelect('post.user', 'user')
 				.leftJoinAndSelect('comments.user', 'commentor')
 				.orderBy('post.updatedAt', 'DESC')
+				.limit(5)
 				.getMany();
 
 			if (!posts) {
@@ -71,7 +75,14 @@ router.get(
 		const results = await Post.createQueryBuilder('post')
 			.where('post.content LIKE :content', { content: `%${content}%` })
 			.leftJoin('post.user', 'user')
-			.select(['post.uuid', 'post.content', 'post.img', 'user.username'])
+			.select([
+				'post.uuid',
+				'post.content',
+				'post.createdAt',
+				'post.img',
+				'user.username',
+			])
+			.orderBy('post.createdAt', 'DESC')
 			.getMany();
 
 		res.json(results);
@@ -83,7 +94,10 @@ router.get(
 	'/:postId',
 	asyncHandler(async (req, res) => {
 		const { postId } = req.params;
-		const post = await Post.findOne({ where: { uuid: postId }, relations: ['user'] });
+		const post = await Post.findOne({
+			where: { uuid: postId },
+			relations: ['user', 'comments', 'comments.user'],
+		});
 
 		if (!post) {
 			res.status(404);
