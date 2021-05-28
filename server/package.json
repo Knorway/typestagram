@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "nodemon src/server.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "NODE_ENV=production ts-node src/server.ts"
+		"build": "tsc --build",
+		"start": "NODE_ENV=production node build/server.js"
 	},
 	"keywords": [],
 	"author": "",
