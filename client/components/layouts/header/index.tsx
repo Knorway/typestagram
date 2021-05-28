@@ -24,15 +24,16 @@ function Header() {
 		debounce(async (e: ChangeEvent<HTMLInputElement>) => {
 			const { value: keyword } = e.target;
 			setIsLoadingData(true);
+
+			if (!keyword) setInstantData(null);
 			if (keyword) {
 				const response = await client.get(
 					`/posts/search/instant?content=${keyword}`,
 					{ headers: BearerHeader() }
 				);
 				setInstantData(response.data);
-				setIsLoadingData(false);
 			}
-			if (!keyword) setInstantData(null);
+
 			setIsLoadingData(false);
 		}, 300),
 		[]
@@ -125,7 +126,7 @@ function Header() {
 							borderColor='gray.200'
 							borderRadius='4px'
 							p='3px'
-							maxH='550px'
+							maxH='600px'
 							overflowY='auto'
 							alignItems='self-start'
 							zIndex='19'

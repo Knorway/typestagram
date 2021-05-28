@@ -1,18 +1,15 @@
-import { Button } from '@chakra-ui/button';
-import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Image } from '@chakra-ui/image';
-import { Input, InputProps } from '@chakra-ui/input';
 import { Box, Flex, VStack } from '@chakra-ui/layout';
-import { FieldConfig, Form, Formik, useField } from 'formik';
-import { ChangeEventHandler, MutableRefObject, useEffect, useRef, useState } from 'react';
-import { HiOutlinePhotograph } from 'react-icons/hi';
-import { RiSendPlaneFill } from 'react-icons/ri';
-import client, { API_URL } from '../../../api';
-import { BearerHeader } from '../../../lib/bearerHeader';
-import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/toast';
+import { Form, Formik } from 'formik';
+import { ChangeEventHandler, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { mutate } from 'swr';
+import client, { API_URL } from '../../../api';
 import { usePostModal } from '../../../hooks/usePostModal';
-import { useAppSelector } from '../../../store';
+import { BearerHeader } from '../../../lib/bearerHeader';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { postModalActions } from '../../../store/PostModal';
+import { PostImgButton, PostSubmitButton } from './forms';
 
 function AddPost() {
 	const [imageRef, setImageRef] = useState<MutableRefObject<any>>(null);
@@ -21,6 +18,7 @@ function AddPost() {
 	const toast = useToast();
 
 	const editOn = useAppSelector((state) => state.postModal.editOn);
+	const dispatch = useAppDispatch();
 
 	const uploadHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
 		const reader = new FileReader();
@@ -90,6 +88,7 @@ function AddPost() {
 								if (editOn) form.append('originalImg', editOn.img);
 
 								try {
+									dispatch(postModalActions.setLoading(true));
 									await client[method](url, form, {
 										headers: BearerHeader(),
 									});
@@ -103,6 +102,8 @@ function AddPost() {
 									});
 								} catch (error) {
 									console.log(error.response.data.message);
+								} finally {
+									dispatch(postModalActions.setLoading(false));
 								}
 							}}
 						>
@@ -131,60 +132,6 @@ function AddPost() {
 				</VStack>
 			)}
 		</Box>
-	);
-}
-
-function PostSubmitButton({ as, ...props }: FieldConfig | InputProps | any) {
-	const [field] = useField({
-		name: props.name,
-		value: props.value,
-		type: props.type,
-	});
-
-	return (
-		<>
-			<Input
-				border='none'
-				pt='2'
-				placeholder='포스트는 반드시 사진과 글을 포함해야 합니다'
-				_focus={{ outline: 'none' }}
-				{...field}
-			/>
-			<FormControl w='min-content' pt='2' cursor='pointer'>
-				<FormLabel m='0' mr='8px' htmlFor='imgUploadSubmit'>
-					<RiSendPlaneFill fontSize='1.8rem' cursor='pointer' />
-				</FormLabel>
-				<Button type='submit' display='none' id='imgUploadSubmit' />
-			</FormControl>
-		</>
-	);
-}
-
-function PostImgButton({ as, ...props }: FieldConfig | InputProps | any) {
-	const [field, meta, helpers] = useField({
-		name: props.name,
-		value: props.value,
-		type: props.type,
-	});
-
-	return (
-		<>
-			<FormControl w='min-content' pt='2' cursor='pointer'>
-				<FormLabel m='0' mr='8px' htmlFor='imgUploadButton'>
-					<HiOutlinePhotograph fontSize='1.8rem' cursor='pointer' />
-				</FormLabel>
-				<Input
-					type='file'
-					accept='image/*'
-					display='none'
-					onChange={(e) => {
-						props.uploadHandler(e);
-						helpers.setValue(e.target.files[0]);
-					}}
-					id='imgUploadButton'
-				/>
-			</FormControl>
-		</>
 	);
 }
 

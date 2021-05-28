@@ -15,7 +15,7 @@ const router = express.Router();
 router.get(
 	'/',
 	asyncHandler(async (req, res) => {
-		const { lastId, limit } = req.query;
+		const { lastId } = req.query;
 
 		try {
 			const posts = await Post.createQueryBuilder('post')
@@ -25,7 +25,7 @@ router.get(
 				.leftJoinAndSelect('post.user', 'user')
 				.leftJoinAndSelect('comments.user', 'commentor')
 				.orderBy('post.updatedAt', 'DESC')
-				.limit(5)
+				.take(5)
 				.getMany();
 
 			if (!posts) {

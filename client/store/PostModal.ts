@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 interface PostState {
 	isOpened: boolean;
 	editOn: any;
+	isLoading: boolean;
 }
 
 const initialState = {
 	isOpened: false,
 	editOn: null,
+	isLoading: false,
 } as PostState;
 
 const postModalSlice = createSlice({
@@ -20,6 +22,9 @@ const postModalSlice = createSlice({
 		},
 		editOn: (state, action) => {
 			state.editOn = action.payload;
+		},
+		setLoading: (state, action) => {
+			state.isLoading = action.payload;
 		},
 	},
 });

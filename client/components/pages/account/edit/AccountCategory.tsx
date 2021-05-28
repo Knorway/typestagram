@@ -9,7 +9,7 @@ interface CategoryProps {
 }
 
 function AccountCategory({ category, active, setCategory }: CategoryProps) {
-	const handleCategoryChange = (category) => {
+	const handleCategoryChange = (category: string) => {
 		setCategory(category);
 	};
 
