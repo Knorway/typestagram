@@ -11,7 +11,7 @@ import userRouter from './routes/user';
 const app = express();
 
 app.use(morgan('dev'));
-app.use(cors({ origin: true }));
+app.use(cors({ origin: ['http://localhost:3000', 'typestagram.site'] }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

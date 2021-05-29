@@ -16,7 +16,7 @@ exports.passportAuth = exports.jwtAuth = void 0;
 const passport_1 = __importDefault(require("passport"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const token_1 = require("../lib/token");
-const CLIENT_URL = 'http://localhost:3000';
+const url_1 = require("../config/url");
 const jwtAuth = (req, res, next) => {
     return passport_1.default.authenticate('jwt', { session: false }, (error, user) => {
         const authError = error || !user;
@@ -37,7 +37,7 @@ const passportAuth = (provider) => {
                 throw new Error(`${provider} oauth strategy callback error`);
             }
             const token = token_1.generateToken(user.uuid);
-            res.redirect(CLIENT_URL + `/authredirect?with=${token}`);
+            res.redirect(url_1.CLIENT_URL + `/authredirect?with=${token}`);
         })(req, res, next);
     }));
 };
