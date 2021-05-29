@@ -29,17 +29,17 @@ const jwtOptions = {
 const githubOptions = {
     clientID: process.env.GITHUB_CLIENT,
     clientSecret: process.env.GITHUB_SECRET,
-    callbackURL: `${url_1.CLIENT_URL}/auth/github/callback`,
+    callbackURL: `${url_1.URL}/auth/github/callback`,
 };
 const googleOptions = {
     clientID: process.env.GOOGLE_CLIENT,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: `${url_1.CLIENT_URL}/auth/google/callback`,
+    callbackURL: `${url_1.URL}/auth/google/callback`,
 };
 const naverOptions = {
     clientID: process.env.NAVER_CLIENT,
     clientSecret: process.env.NAVER_SECRET,
-    callbackURL: `${url_1.CLIENT_URL}/auth/naver/callback`,
+    callbackURL: `${url_1.URL}/auth/naver/callback`,
 };
 const handleOAuthUser = (done, profile) => __awaiter(void 0, void 0, void 0, function* () {
     try {
