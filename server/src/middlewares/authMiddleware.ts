@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import asyncHandler from 'express-async-handler';
 import { generateToken } from '../lib/token';
+import { CLIENT_URL } from '../config/url';
 
-const CLIENT_URL = 'http://localhost:3000';
 type role = 'public' | 'private' | 'me';
 
 export const jwtAuth = (req: Request, res: Response, next: NextFunction) => {
