@@ -5,8 +5,8 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
-		"export": "next build && next export",
-		"export-netlify": "npm install && next build && next export",
+		"export": "NODE_ENV=production next build && next export",
+		"export-netlify": " npm install && next build && next export",
 		"start": "next start"
 	},
 	"dependencies": {

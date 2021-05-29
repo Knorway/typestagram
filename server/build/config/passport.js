@@ -20,6 +20,7 @@ const passport_google_oauth20_1 = require("passport-google-oauth20");
 const User_1 = require("../entity/User");
 const passport_naver_1 = require("passport-naver");
 const Followship_1 = require("../entity/junction/Followship");
+const url_1 = require("./url");
 dotenv_1.default.config();
 const jwtOptions = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -28,17 +29,17 @@ const jwtOptions = {
 const githubOptions = {
     clientID: process.env.GITHUB_CLIENT,
     clientSecret: process.env.GITHUB_SECRET,
-    callbackURL: 'http://localhost:4000/auth/github/callback',
+    callbackURL: `${url_1.CLIENT_URL}/auth/github/callback`,
 };
 const googleOptions = {
     clientID: process.env.GOOGLE_CLIENT,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: 'http://localhost:4000/auth/google/callback',
+    callbackURL: `${url_1.CLIENT_URL}/auth/google/callback`,
 };
 const naverOptions = {
     clientID: process.env.NAVER_CLIENT,
     clientSecret: process.env.NAVER_SECRET,
-    callbackURL: 'http://localhost:4000/auth/naver/callback',
+    callbackURL: `${url_1.CLIENT_URL}/auth/naver/callback`,
 };
 const handleOAuthUser = (done, profile) => __awaiter(void 0, void 0, void 0, function* () {
     try {

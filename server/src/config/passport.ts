@@ -17,6 +17,7 @@ import {
 import { User } from '../entity/User';
 import { Strategy as naverStategy, StrategyOption as naverOptions } from 'passport-naver';
 import { Followship } from '../entity/junction/Followship';
+import { CLIENT_URL } from './url';
 
 dotenv.config();
 
@@ -34,17 +35,17 @@ const jwtOptions: jwtOptions = {
 const githubOptions: githubOptions = {
 	clientID: process.env.GITHUB_CLIENT!,
 	clientSecret: process.env.GITHUB_SECRET!,
-	callbackURL: 'http://localhost:4000/auth/github/callback',
+	callbackURL: `${CLIENT_URL}/auth/github/callback`,
 };
 const googleOptions: googleOptions = {
 	clientID: process.env.GOOGLE_CLIENT!,
 	clientSecret: process.env.GOOGLE_SECRET!,
-	callbackURL: 'http://localhost:4000/auth/google/callback',
+	callbackURL: `${CLIENT_URL}/auth/google/callback`,
 };
 const naverOptions: naverOptions = {
 	clientID: process.env.NAVER_CLIENT!,
 	clientSecret: process.env.NAVER_SECRET!,
-	callbackURL: 'http://localhost:4000/auth/naver/callback',
+	callbackURL: `${CLIENT_URL}/auth/naver/callback`,
 };
 
 const handleOAuthUser = async (done: any, profile: any) => {
