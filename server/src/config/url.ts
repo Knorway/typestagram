@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export const URL =
 	process.env.NODE_ENV === 'production'
 		? 'https://api.typestagram.site'
