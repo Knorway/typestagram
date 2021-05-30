@@ -1,6 +1,6 @@
 export const URL =
 	process.env.NODE_ENV === 'production'
-		? process.env.NEXT_PUBLIC_API_URL
+		? 'https://api.typestagram.site'
 		: 'http://localhost:4000';
 
 export const CLIENT_URL =
