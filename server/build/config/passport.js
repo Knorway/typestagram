@@ -22,7 +22,6 @@ const passport_naver_1 = require("passport-naver");
 const Followship_1 = require("../entity/junction/Followship");
 const url_1 = require("./url");
 dotenv_1.default.config();
-console.log(`-------${url_1.URL}------`);
 const jwtOptions = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
