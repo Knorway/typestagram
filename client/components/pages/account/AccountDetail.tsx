@@ -44,7 +44,7 @@ const AccountDetail = () => {
 		}
 	}, [profileUser]);
 
-	if (!profileUser || !user) return null;
+	if (!profileUser) return null;
 
 	return (
 		<VStack maxW='967px' w='100%' p='2rem'>
