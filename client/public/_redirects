@@ -1,3 +1,5 @@
+/posts/*                    /posts/[postId].html                 200
+
 /account/*/edit/password    /account/[uuid]/edit/password.html   200
 /account/*/edit             /account/[uuid]/edit.html            200
 /account/*                  /account/[uuid].html                 200
