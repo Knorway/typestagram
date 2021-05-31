@@ -13,7 +13,7 @@ const post_1 = __importDefault(require("./routes/post"));
 const user_1 = __importDefault(require("./routes/user"));
 const app = express_1.default();
 app.use(morgan_1.default('dev'));
-app.use(cors_1.default({ origin: ['http://localhost:3000', 'typestagram.site'] }));
+app.use(cors_1.default({ origin: ['http://localhost:3000', 'https://typestagram.site'] }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use('/auth', auth_1.default);
