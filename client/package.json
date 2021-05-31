@@ -6,7 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"export": "next build && next export",
-		"export-netlify": "npm install && npm run export",
+		"export-netlify": "npm run export",
 		"start": "next start"
 	},
 	"dependencies": {
