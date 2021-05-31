@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/button';
 import { Image } from '@chakra-ui/image';
 import { Box, Divider, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { IoMdSettings } from 'react-icons/io';
 import useSWR from 'swr';
 import client, { API_URL } from '../../../api';
@@ -16,9 +16,10 @@ const AccountDetail = () => {
 	const router = useRouter();
 	const { uuid } = router.query;
 	const { user } = useAuth();
-	const { data: profileUser } = useSWR(
+	const { data: profileUser, error } = useSWR(
 		`${API_URL}/users/${uuid}`,
 		async (url) => {
+			if (!uuid) return;
 			const response = await client.get(url, { headers: BearerHeader() });
 			return response.data;
 		},
@@ -43,6 +44,10 @@ const AccountDetail = () => {
 			return result;
 		}
 	}, [profileUser]);
+
+	useEffect(() => {
+		if (error) router.push('/');
+	}, [error]);
 
 	if (!profileUser) return null;
 

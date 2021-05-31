@@ -4,7 +4,7 @@ import { Input } from '@chakra-ui/input';
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import client from '../../../../api';
 import useAuth from '../../../../hooks/useAuth';
 import { BearerHeader } from '../../../../lib/bearerHeader';
@@ -18,8 +18,6 @@ function AccountDetailProfile() {
 	const [editError, setEditError] = useState(null);
 	const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl);
 	const [imgUrl, setImgUrl] = useState(null);
-
-	console.log(user);
 
 	const handleAvatarChange: ChangeEventHandler<HTMLInputElement> = (e) => {
 		const reader = new FileReader();

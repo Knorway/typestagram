@@ -1,5 +1,6 @@
 import { HStack, UnorderedList, VStack } from '@chakra-ui/layout';
-import React, { ReactNode, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { ReactNode, useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import AccountCategory from '../pages/account/edit/AccountCategory';
 
@@ -19,7 +20,15 @@ interface AccountEditProps {
 
 function AccountEditLayout({ children }: AccountEditProps) {
 	const [currentCategory, setcurrentCategory] = useState('프로필 편집');
+	const router = useRouter();
 	const { user } = useAuth();
+
+	useEffect(() => {
+		if (!router.isReady) return;
+		if (router.query.uuid !== user.uuid) router.push('/');
+	}, [router.isReady]);
+
+	if (router.query.uuid !== user.uuid) return null;
 
 	return (
 		<HStack
