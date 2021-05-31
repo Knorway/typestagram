@@ -1,3 +1,10 @@
 module.exports = {
-	exportTrailingSlash: true,
+	async rewrites() {
+		return [
+			{
+				source: '/:any*',
+				destination: '/',
+			},
+		];
+	},
 };
