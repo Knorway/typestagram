@@ -28,10 +28,14 @@ function RegisterPage() {
 					.required('필수 항목입니다'),
 				username: string().required('필수 항목입니다'),
 				password: string().required('필수 항목입니다'),
-				confirmPassword: string().oneOf(
-					[ref('password'), null],
-					'비밀번호가 일치하지 않습니다'
-				),
+				confirmPassword: string().test('passwords-match', function (value) {
+					return this.parent.password !== value
+						? this.createError({
+								message: '비밀번호가 일치하지 않습니다',
+								path: 'confirmPassword',
+						  })
+						: true;
+				}),
 			})}
 			onSubmit={async (values) => {
 				try {
@@ -44,7 +48,7 @@ function RegisterPage() {
 				}
 			}}
 		>
-			{({ isSubmitting }) => (
+			{({ errors }) => (
 				<Flex
 					width='100%'
 					height='100vh'
@@ -88,7 +92,7 @@ function RegisterPage() {
 									placeholder='비밀번호 확인'
 									mb='1rem'
 								/>
-								<BaseButton>회원가입</BaseButton>
+								<BaseButton formError={errors}>회원가입</BaseButton>
 								{error && (
 									<small style={{ color: 'tomato', display: 'block' }}>
 										{error}

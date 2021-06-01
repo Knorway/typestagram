@@ -3,8 +3,9 @@ import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Form, Formik } from 'formik';
+import * as yup from 'yup';
 import { useRouter } from 'next/router';
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import client from '../../../../api';
 import useAuth from '../../../../hooks/useAuth';
 import { BearerHeader } from '../../../../lib/bearerHeader';
@@ -66,6 +67,9 @@ function AccountDetailProfile() {
 					username: user.username,
 					userInfo: user.userInfo ? user.userInfo : '',
 				}}
+				validationSchema={yup.object({
+					username: yup.string().required('유저명은 공백일 수 없습니다.'),
+				})}
 				enableReinitialize={true}
 				onSubmit={async (values) => {
 					const form = new FormData();
@@ -81,11 +85,11 @@ function AccountDetailProfile() {
 					}
 				}}
 			>
-				{() => (
+				{({ isValid, getFieldMeta, errors }) => (
 					<VStack w='100%' as={Form} fontWeight='500'>
 						<HStack w='85%'>
 							<Flex flex='2' pl='2rem' w='100%' justifyContent='center'>
-								<Text>닉네임</Text>
+								<Text>유저명</Text>
 							</Flex>
 							<Box flex='5' w='100%'>
 								<EditPageFormikTextInput name='username' />
@@ -101,9 +105,15 @@ function AccountDetailProfile() {
 						</HStack>
 						<Text color='tomato'>
 							{editError && editError.response.data.message}
+							{!isValid && getFieldMeta('username').error}
 						</Text>
 						<Box alignSelf='flex-end' pr='3.1rem'>
-							<BaseButton size='xs' w='75px' type='submit'>
+							<BaseButton
+								size='xs'
+								w='75px'
+								type='submit'
+								formError={errors}
+							>
 								제출
 							</BaseButton>
 						</Box>

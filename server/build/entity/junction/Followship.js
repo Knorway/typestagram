@@ -20,7 +20,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Followship.prototype, "followerId", void 0);
 __decorate([
-    typeorm_1.ManyToOne((type) => User_1.User, (user) => user.followers, { primary: true }),
+    typeorm_1.ManyToOne((type) => User_1.User, (user) => user.followers, {
+        primary: true,
+        onDelete: 'CASCADE',
+    }),
     typeorm_1.JoinColumn({ name: 'followerId' }),
     __metadata("design:type", User_1.User)
 ], Followship.prototype, "follower", void 0);
@@ -29,7 +32,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Followship.prototype, "followingId", void 0);
 __decorate([
-    typeorm_1.ManyToOne((type) => User_1.User, (user) => user.followings, { primary: true }),
+    typeorm_1.ManyToOne((type) => User_1.User, (user) => user.followings, {
+        primary: true,
+        onDelete: 'CASCADE',
+    }),
     typeorm_1.JoinColumn({ name: 'followingId' }),
     __metadata("design:type", User_1.User)
 ], Followship.prototype, "following", void 0);

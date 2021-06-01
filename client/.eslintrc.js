@@ -25,5 +25,6 @@ module.exports = {
 		'eslint-disable react/prop-types': 'off',
 		'no-constant-condition': 'off',
 		'react/prop-types': 'off',
+		'no-mixed-spaces-and-tabs': 'off',
 	},
 };

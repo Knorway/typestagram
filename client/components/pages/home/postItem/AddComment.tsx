@@ -14,7 +14,7 @@ function AddComment({ post, comment, setComment }) {
 		if (e.key === 'Enter') {
 			const response = await fetchComment();
 			if (response) {
-				post.comments.unshift({
+				post.comments.push({
 					user: {
 						id: user.id,
 						username: user.username,

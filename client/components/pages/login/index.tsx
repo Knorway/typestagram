@@ -5,6 +5,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { object, string } from 'yup';
+import client from '../../../api';
 import { loginUser } from '../../../api/auth';
 import { setTokenAndMutate } from '../../../lib/setTokenAndMutate';
 import BaseButton from '../../common/buttons/BaseButton';
@@ -117,7 +118,28 @@ function LoginPage() {
 						bg='white'
 					>
 						데모 계정으로{' '}
-						<Text color='blue.600' ml='4px' cursor='pointer'>
+						<Text
+							color='blue.600'
+							ml='4px'
+							cursor='pointer'
+							onClick={async () => {
+								try {
+									const response = await loginUser({
+										email: 'demo@demo.com',
+										password: '123123',
+									});
+									setTokenAndMutate(
+										'user',
+										response.data,
+										'/auth/validate'
+									);
+									router.push('/');
+								} catch (error) {
+									const message = error.response.data.message;
+									setError(message);
+								}
+							}}
+						>
 							로그인
 						</Text>
 						하기

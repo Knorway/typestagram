@@ -1,7 +1,8 @@
 import { Image } from '@chakra-ui/image';
-import { Box, Flex, VStack } from '@chakra-ui/layout';
+import { Box, Flex, Text, VStack } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/toast';
 import { Form, Formik } from 'formik';
+import * as yup from 'yup';
 import { ChangeEventHandler, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { mutate } from 'swr';
 import client, { API_URL } from '../../../api';
@@ -76,6 +77,18 @@ function AddPost() {
 								description: editOn ? editOn.content : '',
 								img: null,
 							}}
+							validationSchema={yup.object({
+								description: yup
+									.string()
+									.required(
+										'포스트는 글과 이미지를 반드시 포함해야 합니다'
+									),
+								img: yup
+									.mixed()
+									.required(
+										'포스트는 글과 이미지를 반드시 포함해야 합니다'
+									),
+							})}
 							onSubmit={async (values) => {
 								const url = editOn
 									? `/posts/${editOn.id}/edit`
@@ -107,14 +120,21 @@ function AddPost() {
 								}
 							}}
 						>
-							{() => (
+							{({ isValid, getFieldMeta }) => (
 								<Flex
 									w='100%'
 									borderTop='1px'
 									borderTopColor='gray.300'
 									alignItems='center'
+									position='relative'
 									as={Form}
 								>
+									<Box position='absolute' left='33%' bottom='150%'>
+										<small>
+											{(!isValid && getFieldMeta('img').error) ||
+												getFieldMeta('description').error}
+										</small>
+									</Box>
 									<PostSubmitButton
 										type='submit'
 										name='description'

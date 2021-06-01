@@ -49,8 +49,6 @@ const AccountDetail = () => {
 		if (error) router.push('/');
 	}, [error]);
 
-	console.log(uuid);
-
 	if (!profileUser) return null;
 
 	return (

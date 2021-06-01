@@ -6,7 +6,7 @@ import { HiOutlinePhotograph } from 'react-icons/hi';
 import { RiSendPlaneFill } from 'react-icons/ri';
 
 function PostSubmitButton({ as, ...props }: FieldConfig | InputProps | any) {
-	const [field] = useField({
+	const [field, meta, helper] = useField({
 		name: props.name,
 		value: props.value,
 		type: props.type,
@@ -51,6 +51,8 @@ function PostImgButton({ as, ...props }: FieldConfig | InputProps | any) {
 					onChange={(e) => {
 						props.uploadHandler(e);
 						helpers.setValue(e.target.files[0]);
+						console.log(meta.value);
+						console.log(field.value);
 					}}
 					id='imgUploadButton'
 				/>

@@ -6,13 +6,19 @@ import { User } from '../User';
 export class Followship extends BaseModel {
 	@PrimaryColumn()
 	followerId: number;
-	@ManyToOne((type) => User, (user) => user.followers, { primary: true })
+	@ManyToOne((type) => User, (user) => user.followers, {
+		primary: true,
+		onDelete: 'CASCADE',
+	})
 	@JoinColumn({ name: 'followerId' })
 	follower: User;
 
 	@PrimaryColumn()
 	followingId: number;
-	@ManyToOne((type) => User, (user) => user.followings, { primary: true })
+	@ManyToOne((type) => User, (user) => user.followings, {
+		primary: true,
+		onDelete: 'CASCADE',
+	})
 	@JoinColumn({ name: 'followingId' })
 	following: User;
 }

@@ -1,11 +1,15 @@
 import { Button, ButtonProps } from '@chakra-ui/button';
 import { ReactNode } from 'react';
+import { isEmptyObject } from '../../../lib/utils';
 
 interface BaseButtonProps extends ButtonProps {
 	children: ReactNode;
+	formError?: any;
 }
 
-function BaseButton({ children, ...props }: BaseButtonProps) {
+function BaseButton({ children, formError = {}, ...props }: BaseButtonProps) {
+	const isFormError = !isEmptyObject(formError);
+
 	return (
 		<Button
 			type='submit'
@@ -17,6 +21,10 @@ function BaseButton({ children, ...props }: BaseButtonProps) {
 			borderRadius='3px'
 			isFullWidth
 			{...props}
+			_hover={{
+				background: isFormError ? 'gray.200' : '',
+			}}
+			disabled={isFormError}
 		>
 			{children}
 		</Button>

@@ -1,6 +1,7 @@
 import { Avatar } from '@chakra-ui/avatar';
 import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Form, Formik } from 'formik';
+import * as yup from 'yup';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import client from '../../../../api';
@@ -27,6 +28,20 @@ function AccountDetailPassword() {
 			</HStack>
 			<Formik
 				initialValues={{ password: '', newPassword: '', newPasswordConfirm: '' }}
+				validationSchema={yup.object({
+					password: yup.string().required('기존 비밀번호를 입력해주세요.'),
+					newPassword: yup.string().required('변경할 비밀번호를 입력해주세요.'),
+					newPasswordConfirm: yup
+						.string()
+						.test('passwords-match', function (value) {
+							return this.parent.password !== value
+								? this.createError({
+										message: '비밀번호가 일치하지 않습니다.',
+										path: 'newPasswordConfirm',
+								  })
+								: true;
+						}),
+				})}
 				onSubmit={async (values) => {
 					try {
 						await client.put(`/users/${user.id}/password`, values, {
@@ -38,7 +53,7 @@ function AccountDetailPassword() {
 					}
 				}}
 			>
-				{() => (
+				{({ errors }) => (
 					<VStack w='100%' as={Form} fontWeight='500'>
 						<HStack w='85%'>
 							<Box flex='2' pl='2rem' display='flex' w='100%'>
@@ -96,6 +111,7 @@ function AccountDetailPassword() {
 								w='75px'
 								type='submit'
 								isDisabled={isLocalUser}
+								formError={errors}
 							>
 								제출
 							</BaseButton>
