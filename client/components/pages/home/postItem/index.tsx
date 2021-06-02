@@ -13,7 +13,8 @@ interface PostItemProps {
 }
 
 function PostItem({ post, context, contextMutate }: PostItemProps) {
-	console.log('post item rerender');
+	// console.log(post, 'postitem components');
+
 	return (
 		<Box
 			as='article'

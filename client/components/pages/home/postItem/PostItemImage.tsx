@@ -1,9 +1,9 @@
-import { Img } from '@chakra-ui/image';
+import { Image } from '@chakra-ui/image';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/skeleton';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import client from '../../../../api';
 import LikeFollowSection, { FilledLike } from './LikeFollowSection';
 import { BearerHeader } from '../../../../lib/bearerHeader';
@@ -24,12 +24,7 @@ const LikeOverlay = styled(Box)`
 function PostItemImage({ post, context, contextMutate }) {
 	const { user } = useAuth();
 
-	const isLikedPost = useMemo(
-		() => post?.likes?.some((like) => like.userId === user.id),
-		[]
-	);
-
-	const [isLiked, setIsLiked] = useState(isLikedPost);
+	const [isLiked, setIsLiked] = useState(false);
 	const [imgLoaded, setImgLoaded] = useState(false);
 	const [likeOverlay, setLikeOverlay] = useState(false);
 
@@ -58,21 +53,30 @@ function PostItemImage({ post, context, contextMutate }) {
 		}
 	}, [likeOverlay]);
 
+	useEffect(() => {
+		setIsLiked(post.likes?.some((like) => like.userId === user.id));
+	}, [post]);
+
 	if (!post) return null;
 
 	return (
 		<>
 			<Box position='relative'>
 				<Flex justifyContent='center' maxH='600px'>
-					<Img
+					<Image
 						src={post.img}
 						alt='post image'
-						onLoad={setImgLoaded.bind(null, true)}
+						onLoad={() => setImgLoaded(true)}
 						onDoubleClick={likeToggleHandler}
 						w='100%'
+						display={imgLoaded ? 'block' : 'none'}
+					/>
+					<Skeleton
+						height={['300px', '500px']}
+						width='100%'
+						display={imgLoaded ? 'none' : 'block'}
 					/>
 				</Flex>
-				{!imgLoaded && <Skeleton height={['300px', '600px']} width='100%' />}
 				<LikeOverlay
 					data-liked={likeOverlay}
 					onDoubleClick={likeToggleHandler}

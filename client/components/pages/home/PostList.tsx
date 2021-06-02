@@ -66,6 +66,8 @@ function PostList() {
 		return () => document.removeEventListener('scroll', throttleScroll);
 	}, [posts]);
 
+	console.log(posts);
+
 	return (
 		<>
 			{posts?.map((post: Post) => (

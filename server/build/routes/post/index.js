@@ -86,7 +86,7 @@ router.get('/:postId', express_async_handler_1.default((req, res) => __awaiter(v
     const { postId } = req.params;
     const post = yield Post_1.Post.findOne({
         where: { uuid: postId },
-        relations: ['user', 'comments', 'comments.user'],
+        relations: ['user', 'likes', 'comments', 'comments.user'],
     });
     if (!post) {
         res.status(404);
@@ -138,10 +138,16 @@ router.put('/:postId/likes', express_async_handler_1.default((req, res) => __awa
     });
     if (liked) {
         yield Like_1.Like.remove(liked);
-        return res.json({ success: true });
+        const newPost = yield Post_1.Post.findOne(req.params.postId, {
+            relations: ['user', 'likes', 'comments', 'comments.user'],
+        });
+        return res.json(newPost);
     }
     yield Like_1.Like.create({ postId: +req.params.postId, userId: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id }).save();
-    return res.json({ success: true });
+    const newPost = yield Post_1.Post.findOne(req.params.postId, {
+        relations: ['user', 'likes', 'comments', 'comments.user'],
+    });
+    return res.json(newPost);
 })));
 // [POST] /posts/:postId/comment
 router.post('/:postId/comment', express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -168,7 +174,10 @@ router.delete('/:postId/comment/:commentId', express_async_handler_1.default((re
         throw new Error('코멘트를 삭제하는 데 실패했습니다.');
     }
     yield PostComment_1.PostComment.remove(deleted);
-    res.json(deleted);
+    const post = yield Post_1.Post.findOne(req.params.postId, {
+        relations: ['user', 'likes', 'comments', 'comments.user'],
+    });
+    res.json(post);
 })));
 router.get('/test', express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({});
