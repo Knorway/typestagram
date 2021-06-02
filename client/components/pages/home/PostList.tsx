@@ -27,7 +27,7 @@ interface User {
 
 function PostList() {
 	const dispatch = useAppDispatch();
-	const { data: posts } = useSWR(
+	const { data: posts, mutate: contextMutate } = useSWR(
 		`${API_URL}/posts`,
 		async (url) => {
 			const response = await axios.get(url, { headers: BearerHeader() });
@@ -69,7 +69,12 @@ function PostList() {
 	return (
 		<>
 			{posts?.map((post: Post) => (
-				<PostItem post={post} key={post.uuid} />
+				<PostItem
+					post={post}
+					key={post.uuid}
+					context={'postList'}
+					contextMutate={contextMutate}
+				/>
 			))}
 		</>
 	);

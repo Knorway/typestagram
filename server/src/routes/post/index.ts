@@ -96,7 +96,7 @@ router.get(
 		const { postId } = req.params;
 		const post = await Post.findOne({
 			where: { uuid: postId },
-			relations: ['user', 'comments', 'comments.user'],
+			relations: ['user', 'likes', 'comments', 'comments.user'],
 		});
 
 		if (!post) {
@@ -172,11 +172,18 @@ router.put(
 
 		if (liked) {
 			await Like.remove(liked);
-			return res.json({ success: true });
+			const newPost = await Post.findOne(req.params.postId, {
+				relations: ['user', 'likes', 'comments', 'comments.user'],
+			});
+			return res.json(newPost);
 		}
 
 		await Like.create({ postId: +req.params.postId, userId: req.user?.id }).save();
-		return res.json({ success: true });
+		const newPost = await Post.findOne(req.params.postId, {
+			relations: ['user', 'likes', 'comments', 'comments.user'],
+		});
+
+		return res.json(newPost);
 	})
 );
 
@@ -213,7 +220,10 @@ router.delete(
 		}
 
 		await PostComment.remove(deleted);
-		res.json(deleted);
+		const post = await Post.findOne(req.params.postId, {
+			relations: ['user', 'likes', 'comments', 'comments.user'],
+		});
+		res.json(post);
 	})
 );
 

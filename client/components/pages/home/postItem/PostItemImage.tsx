@@ -4,11 +4,11 @@ import { Skeleton } from '@chakra-ui/skeleton';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useEffect, useMemo, useState } from 'react';
-import client, { API_URL } from '../../../../api';
+import client from '../../../../api';
 import LikeFollowSection, { FilledLike } from './LikeFollowSection';
 import { BearerHeader } from '../../../../lib/bearerHeader';
-import { mutate } from 'swr';
 import useAuth from '../../../../hooks/useAuth';
+import { swrStore } from '../../../../lib/swrStore';
 
 const LikeOverlay = styled(Box)`
 	transition: all ease-in 0.1s;
@@ -21,7 +21,7 @@ const LikeOverlay = styled(Box)`
 		`};
 `;
 
-function PostItemImage({ post }) {
+function PostItemImage({ post, context, contextMutate }) {
 	const { user } = useAuth();
 
 	const isLikedPost = useMemo(
@@ -37,12 +37,12 @@ function PostItemImage({ post }) {
 		if (!isLiked) {
 			setLikeOverlay(true);
 		}
-
 		try {
-			await client.put(`/posts/${post.id}/likes`, null, {
+			const setStore = swrStore(context, contextMutate);
+			const response = await client.put(`/posts/${post.id}/likes`, null, {
 				headers: BearerHeader(),
 			});
-			mutate(`${API_URL}/posts`);
+			setStore(response);
 		} catch (error) {
 			console.log(error.response.data.message);
 		}

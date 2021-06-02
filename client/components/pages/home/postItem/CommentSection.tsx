@@ -7,19 +7,23 @@ import { TiDelete } from 'react-icons/ti';
 import useAuth from '../../../../hooks/useAuth';
 import client, { API_URL } from '../../../../api';
 import { BearerHeader } from '../../../../lib/bearerHeader';
-import { mutate } from 'swr';
+import { swrStore } from '../../../../lib/swrStore';
 
-function CommentSection({ post }) {
+function CommentSection({ post, context, contextMutate }) {
 	const [comment, setComment] = useState('');
 	const { user } = useAuth();
 
 	const handleDeleteComment = async (commentId) => {
 		if (window.confirm('정말로 코멘트를 삭제하시겠습니까?')) {
 			try {
-				await client.delete(`${API_URL}/posts/${post.id}/comment/${commentId}`, {
-					headers: BearerHeader(),
-				});
-				mutate(`${API_URL}/posts`);
+				const setStore = swrStore(context, contextMutate);
+				const response = await client.delete(
+					`${API_URL}/posts/${post.id}/comment/${commentId}`,
+					{
+						headers: BearerHeader(),
+					}
+				);
+				setStore(response);
 			} catch (error) {
 				console.log(error.response.data.message);
 			}

@@ -5,7 +5,6 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { object, string } from 'yup';
-import client from '../../../api';
 import { loginUser } from '../../../api/auth';
 import { setTokenAndMutate } from '../../../lib/setTokenAndMutate';
 import BaseButton from '../../common/buttons/BaseButton';

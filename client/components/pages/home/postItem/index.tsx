@@ -1,4 +1,6 @@
 import { Box } from '@chakra-ui/layout';
+import { memo } from 'react';
+import { Mutator } from 'swr/dist/types';
 import { Post } from '../PostList';
 import CommentSection from './CommentSection';
 import PostItemImage from './PostItemImage';
@@ -6,9 +8,12 @@ import UserInfo from './UserInfo';
 
 interface PostItemProps {
 	post: Post;
+	context: string;
+	contextMutate: Mutator;
 }
 
-function PostItem({ post }: PostItemProps) {
+function PostItem({ post, context, contextMutate }: PostItemProps) {
+	console.log('post item rerender');
 	return (
 		<Box
 			as='article'
@@ -19,11 +24,11 @@ function PostItem({ post }: PostItemProps) {
 			borderRadius='3px'
 			fontSize='14px'
 		>
-			<UserInfo post={post} />
-			<PostItemImage post={post} />
-			<CommentSection post={post} />
+			<UserInfo post={post} context={context} contextMutate={contextMutate} />
+			<PostItemImage post={post} context={context} contextMutate={contextMutate} />
+			<CommentSection post={post} context={context} contextMutate={contextMutate} />
 		</Box>
 	);
 }
 
-export default PostItem;
+export default memo(PostItem);

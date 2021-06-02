@@ -13,10 +13,12 @@ import useFetch from '../../../../hooks/useFetch';
 import useAuth from '../../../../hooks/useAuth';
 import { deletePost, makeFollowship } from '../../../../api/post';
 import { API_URL } from '../../../../api';
+import { useRouter } from 'next/router';
 
-function UserInfo({ post }) {
+function UserInfo({ post, context, contextMutate }) {
 	const [isFollowing, setIsFollowing] = useState(false);
 
+	const router = useRouter();
 	const { user } = useAuth();
 	const toast = useToast();
 
@@ -33,6 +35,8 @@ function UserInfo({ post }) {
 		if (window.confirm('정말 포스트를 삭제하시겠습니까?')) {
 			const response = await fetchDeletePost();
 			if (response) {
+				if (context === 'postById') return router.push('/');
+				if (context === 'searchResults') return router.reload()
 				mutate(`${API_URL}/posts`);
 			}
 		}
