@@ -49,7 +49,7 @@ https://typestagram.site (데모아이디로 로그인하기 버튼 클릭)
 
 **로그인 플로우**
 
-![로그인 플로우](https://github.com/Knorway/ImageBucket/blob/main/project/typestagram/login_draw.png?raw=true)
+![로그인 플로우](https://github.com/Knorway/ImageBucket/blob/main/ImageBucket/project/typestagram/login_draw.png?raw=true)
 <br />
 
 ![로그인_1](https://github.com/Knorway/ImageBucket/blob/main/ImageBucket/project/typestagram/login_1.gif?raw=true)
