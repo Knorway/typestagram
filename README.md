@@ -180,7 +180,7 @@ export const debounce = (callback: CallableFunction, delay: number) => {
 
 [server/src/entity/junction/Followship.ts](https://github.com/Knorway/typestagram/blob/main/server/src/entity/junction/Followship.ts)
 
-[server/src/routes/user/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/user/index.ts#L86)
+[server/src/routes/user/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/user/index.ts#L96)
 
 </div>
 </details>
