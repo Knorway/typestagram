@@ -27,7 +27,7 @@ __decorate([
     __metadata("design:type", String)
 ], Post.prototype, "img", void 0);
 __decorate([
-    typeorm_1.ManyToOne((type) => User_1.User, (user) => user.posts),
+    typeorm_1.ManyToOne((type) => User_1.User, (user) => user.posts, { onDelete: 'CASCADE' }),
     typeorm_1.JoinTable({ name: 'userId' }),
     __metadata("design:type", User_1.User)
 ], Post.prototype, "user", void 0);

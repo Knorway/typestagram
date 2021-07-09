@@ -17,9 +17,7 @@ export const swrStore: swrStoreType = (context, mutate) => {
 		}
 		case 'searchResults': {
 			return (response: AxiosResponse) => {
-				console.log(response.data, 'res.data');
 				mutate((posts) => {
-					console.log(posts, 'posts');
 					return posts.map((post) =>
 						post.id === response.data.id ? response.data : post
 					);

@@ -1,8 +1,7 @@
 import { HStack, VStack } from '@chakra-ui/layout';
 import { ReactNode } from 'react';
 import useAuth from '../../hooks/useAuth';
-import { allowed } from '../../hooks/useCheckAuth';
-import { matchPathname } from '../../lib/matchPathname';
+import { allowed, matchPathname } from '../../lib/matchPathname';
 import Header from './header';
 
 interface MainLayoutProps {

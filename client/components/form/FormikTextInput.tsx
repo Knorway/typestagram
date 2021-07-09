@@ -8,18 +8,6 @@ function FormikTextInput({ as, ...props }: FieldConfig | InputProps) {
 		type: props.type,
 	});
 
-	// const handleChange = (e) => {
-	// 	switch (field.name) {
-	// 		case 'username': {
-	// 			console.log('username');
-	// 			return;
-	// 		}
-	// 		default: {
-	// 			helper.setValue(e.target.value);
-	// 		}
-	// 	}
-	// };
-
 	return (
 		<div>
 			{<Input size='sm' marginBottom='6px' {...props} {...field} />}

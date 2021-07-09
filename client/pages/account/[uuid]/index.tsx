@@ -1,3 +1,4 @@
+import { Fade } from '@chakra-ui/transition';
 import Head from 'next/head';
 import AccountDetail from '../../../components/pages/account/AccountDetail';
 import useAuth from '../../../hooks/useAuth';
@@ -10,7 +11,9 @@ function accountDetailPage() {
 			<Head>
 				<title>{`${user.username} • typestagram`}</title>
 			</Head>
-			<AccountDetail />;
+			<Fade in={true}>
+				<AccountDetail />
+			</Fade>
 		</>
 	);
 }

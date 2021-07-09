@@ -6,7 +6,6 @@ function EditPageFormikTextInput({ as, ...props }: FieldConfig | InputProps) {
 		name: props.name,
 		value: props.value,
 		type: props.type,
-		defaultValue: 'skdjfhskjdhfsd',
 	});
 
 	return (

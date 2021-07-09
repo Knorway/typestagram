@@ -92,7 +92,9 @@ function RegisterPage() {
 									placeholder='비밀번호 확인'
 									mb='1rem'
 								/>
-								<BaseButton formError={errors}>회원가입</BaseButton>
+								<BaseButton formError={errors} type='submit'>
+									회원가입
+								</BaseButton>
 								{error && (
 									<small style={{ color: 'tomato', display: 'block' }}>
 										{error}

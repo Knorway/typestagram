@@ -1,4 +1,5 @@
 import { VStack } from '@chakra-ui/layout';
+import { Fade } from '@chakra-ui/transition';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -33,14 +34,16 @@ function PostById() {
 	if (!post) return null;
 
 	return (
-		<VStack>
-			<PostItem
-				post={post}
-				key={post.uuid}
-				context='postById'
-				contextMutate={contextMutate}
-			/>
-		</VStack>
+		<Fade in={true}>
+			<VStack>
+				<PostItem
+					post={post}
+					key={post.uuid}
+					context='postById'
+					contextMutate={contextMutate}
+				/>
+			</VStack>
+		</Fade>
 	);
 }
 

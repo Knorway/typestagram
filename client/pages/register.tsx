@@ -1,7 +1,12 @@
+import { Fade } from '@chakra-ui/transition';
 import RegisterPage from '../components/pages/register';
 
 function Register() {
-	return <RegisterPage />;
+	return (
+		<Fade in={true}>
+			<RegisterPage />;
+		</Fade>
+	);
 }
 
 export default Register;

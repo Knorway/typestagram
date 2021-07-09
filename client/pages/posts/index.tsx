@@ -1,4 +1,5 @@
 import { Text, VStack } from '@chakra-ui/layout';
+import { Fade } from '@chakra-ui/transition';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import client from '../../api';
@@ -20,24 +21,26 @@ function PostsPage() {
 	);
 
 	return (
-		<VStack>
-			<Text
-				fontSize='18px'
-				fontWeight='500'
-				fontStyle='italic'
-				color='gray.700'
-			>{`키워드 ${decodeURIComponent(
-				urlPath[1].split('=')[1]
-			)}에 대한 검색결과 입니다.`}</Text>
-			{posts?.map((post: Post) => (
-				<PostItem
-					post={post}
-					key={post.uuid}
-					context='searchResults'
-					contextMutate={contextMutate}
-				/>
-			))}
-		</VStack>
+		<Fade in={true}>
+			<VStack>
+				<Text
+					fontSize='18px'
+					fontWeight='500'
+					fontStyle='italic'
+					color='gray.700'
+				>{`키워드 ${decodeURIComponent(
+					urlPath[1].split('=')[1]
+				)}에 대한 검색결과 입니다.`}</Text>
+				{posts?.map((post: Post) => (
+					<PostItem
+						post={post}
+						key={post.uuid}
+						context='searchResults'
+						contextMutate={contextMutate}
+					/>
+				))}
+			</VStack>
+		</Fade>
 	);
 }
 

@@ -14,7 +14,7 @@ export class Post extends BaseModel {
 	img: string;
 
 	// [User]
-	@ManyToOne((type) => User, (user) => user.posts)
+	@ManyToOne((type) => User, (user) => user.posts, { onDelete: 'CASCADE' })
 	@JoinTable({ name: 'userId' })
 	user: User;
 

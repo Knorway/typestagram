@@ -1,4 +1,6 @@
+import { ColorModeScript } from '@chakra-ui/color-mode';
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
+import overrides from '../styles';
 
 class MyDocument extends Document {
 	static async getInitialProps(ctx: DocumentContext) {
@@ -17,6 +19,9 @@ class MyDocument extends Document {
 					/>
 				</Head>
 				<body>
+					<ColorModeScript
+						initialColorMode={overrides.config.initialColorMode}
+					/>
 					<Main />
 					<NextScript />
 				</body>

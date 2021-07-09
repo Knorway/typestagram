@@ -19,6 +19,11 @@ router.post(
 			throw new Error('이미 존재하는 계정입니다');
 		}
 
+		if (await User.findOne({ where: { username } })) {
+			res.status(400);
+			throw new Error('이미 존재하는 유저명입니다.');
+		}
+
 		const hash = await bcrypt.hash(password, 12);
 		const user = await User.create({ email, username, password: hash }).save();
 		const token = generateToken(user.uuid);

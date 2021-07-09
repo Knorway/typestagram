@@ -34,7 +34,7 @@ function AccountDetailPassword() {
 					newPasswordConfirm: yup
 						.string()
 						.test('passwords-match', function (value) {
-							return this.parent.password !== value
+							return this.parent.newPassword !== value
 								? this.createError({
 										message: '비밀번호가 일치하지 않습니다.',
 										path: 'newPasswordConfirm',
@@ -110,7 +110,7 @@ function AccountDetailPassword() {
 								size='xs'
 								w='75px'
 								type='submit'
-								isDisabled={isLocalUser}
+								disabled={isLocalUser}
 								formError={errors}
 							>
 								제출

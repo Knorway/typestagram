@@ -78,7 +78,7 @@ function LikeFollowSection({ isLiked, setIsLiked, likes }: SectionProps) {
 				</Box>
 			</HStack>
 			<Box>
-				<Text fontSize='14px' fontWeight='600' pb='1'>
+				<Text fontSize='14px' fontWeight='600' pb='1' color='black'>
 					좋아요 {likes?.length === 0 || !likes?.length ? 0 : likes?.length}개
 				</Text>
 			</Box>

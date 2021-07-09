@@ -23,7 +23,7 @@ router.get(
 
 		if (!user) {
 			res.status(404);
-			throw new Error('유저 어카운트 정보를 가져오는 데 실패했습니다.');
+			throw new Error('유저 어카운트 정보를 가져오는데 실패했습니다.');
 		}
 
 		const followships = await Followship.createQueryBuilder('flsp')
@@ -42,15 +42,21 @@ router.put(
 	imgUpload.single('avatarUrl'),
 	asyncHandler(async (req: any, res) => {
 		const nameExists = await User.findOne({ where: { username: req.body.username } });
+		if (nameExists?.email === 'demo@demo.com') {
+			res.status(400);
+			throw new Error('데모 계정은 정보를 변경할 수 없습니다. 😂');
+		}
+
 		if (nameExists && nameExists.username !== req.user?.username) {
 			res.status(400);
 			throw new Error('이미 존재하는 유저명입니다.');
 		}
 
-		const edited = await User.update(req.user?.id!, {
+		const exUser = await User.findOne(req.params.userId);
+		const edited = await User.update(req.user?.id, {
 			username: req.body.username,
 			userInfo: req.body.userInfo,
-			avatarUrl: req.file?.location ? req.file?.location : nameExists?.avatarUrl,
+			avatarUrl: req.file?.location ? req.file?.location : exUser?.avatarUrl,
 		});
 		if (!edited) {
 			res.status(400);
@@ -60,6 +66,7 @@ router.put(
 	})
 );
 
+// [PUT] /users/:userId/password
 router.put(
 	'/:userId/password',
 	asyncHandler(async (req, res) => {
@@ -69,16 +76,19 @@ router.put(
 			throw new Error('새로운 비밀번호가 일치하지 않습니다.');
 		}
 
-		const user = await User.findOne(req.user?.id, { select: ['password'] });
-		const isPasswordMatch = await bcrypt.compare(password, user?.password!);
+		const user = await User.findOne(req.user?.id, { select: ['password', 'email'] });
+		if (user?.email === 'demo@demo.com') {
+			res.status(400);
+			throw new Error('데모 계정은 정보를 변경할 수 없습니다. 😂');
+		}
 
+		const isPasswordMatch = await bcrypt.compare(password, user?.password!);
 		if (!isPasswordMatch) {
 			res.status(400);
-			throw new Error('기존 비밀번호를 정확히게 입력해주세요.');
+			throw new Error('기존 비밀번호를 정확하게 입력해주세요.');
 		}
 
 		await User.update(user!, { password: await bcrypt.hash(newPassword, 12) });
-
 		res.json({ success: true });
 	})
 );
@@ -97,7 +107,6 @@ router.post(
 		const isFollowed = await Followship.findOne({
 			where: { followerId: req.user?.id, followingId: userId },
 		});
-
 		if (isFollowed) {
 			await Followship.remove(isFollowed);
 			res.status(204);
@@ -108,7 +117,6 @@ router.post(
 			followerId: req.user?.id,
 			followingId: +userId,
 		}).save();
-
 		if (!flsp) {
 			res.status(404);
 			throw new Error('팔로우 맺기에 실패했습니다.');

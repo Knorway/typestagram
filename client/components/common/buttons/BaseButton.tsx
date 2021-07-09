@@ -20,10 +20,10 @@ function BaseButton({ children, formError = {}, ...props }: BaseButtonProps) {
 			height='2rem'
 			borderRadius='3px'
 			isFullWidth
-			{...props}
 			_hover={{
 				background: isFormError ? 'gray.200' : '',
 			}}
+			{...props}
 			disabled={isFormError}
 		>
 			{children}

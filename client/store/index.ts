@@ -30,7 +30,7 @@ const createStore = () => {
 };
 
 const wrapper = createWrapper(createStore, {
-	debug: true,
+	debug: process.env.NODE_ENV !== 'production' && true,
 });
 
 const store = createStore();

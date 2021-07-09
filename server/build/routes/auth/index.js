@@ -27,6 +27,10 @@ router.post('/register', express_async_handler_1.default((req, res) => __awaiter
         res.status(400);
         throw new Error('이미 존재하는 계정입니다');
     }
+    if (yield User_1.User.findOne({ where: { username } })) {
+        res.status(400);
+        throw new Error('이미 존재하는 유저명입니다.');
+    }
     const hash = yield bcryptjs_1.default.hash(password, 12);
     const user = yield User_1.User.create({ email, username, password: hash }).save();
     const token = token_1.generateToken(user.uuid);

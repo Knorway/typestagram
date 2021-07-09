@@ -31,7 +31,7 @@ router.get('/:userId', express_async_handler_1.default((req, res) => __awaiter(v
         .getOne();
     if (!user) {
         res.status(404);
-        throw new Error('유저 어카운트 정보를 가져오는 데 실패했습니다.');
+        throw new Error('유저 어카운트 정보를 가져오는데 실패했습니다.');
     }
     const followships = yield Followship_1.Followship.createQueryBuilder('flsp')
         .where('flsp.follower = :id', { id: user.id })
@@ -44,14 +44,19 @@ router.get('/:userId', express_async_handler_1.default((req, res) => __awaiter(v
 router.put('/:userId', multer_1.imgUpload.single('avatarUrl'), express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
     const nameExists = yield User_1.User.findOne({ where: { username: req.body.username } });
+    if ((nameExists === null || nameExists === void 0 ? void 0 : nameExists.email) === 'demo@demo.com') {
+        res.status(400);
+        throw new Error('데모 계정은 정보를 변경할 수 없습니다. 😂');
+    }
     if (nameExists && nameExists.username !== ((_a = req.user) === null || _a === void 0 ? void 0 : _a.username)) {
         res.status(400);
         throw new Error('이미 존재하는 유저명입니다.');
     }
+    const exUser = yield User_1.User.findOne(req.params.userId);
     const edited = yield User_1.User.update((_b = req.user) === null || _b === void 0 ? void 0 : _b.id, {
         username: req.body.username,
         userInfo: req.body.userInfo,
-        avatarUrl: ((_c = req.file) === null || _c === void 0 ? void 0 : _c.location) ? (_d = req.file) === null || _d === void 0 ? void 0 : _d.location : nameExists === null || nameExists === void 0 ? void 0 : nameExists.avatarUrl,
+        avatarUrl: ((_c = req.file) === null || _c === void 0 ? void 0 : _c.location) ? (_d = req.file) === null || _d === void 0 ? void 0 : _d.location : exUser === null || exUser === void 0 ? void 0 : exUser.avatarUrl,
     });
     if (!edited) {
         res.status(400);
@@ -59,6 +64,7 @@ router.put('/:userId', multer_1.imgUpload.single('avatarUrl'), express_async_han
     }
     res.json(edited);
 })));
+// [PUT] /users/:userId/password
 router.put('/:userId/password', express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e;
     const { password, newPassword, newPasswordConfirm } = req.body;
@@ -66,11 +72,15 @@ router.put('/:userId/password', express_async_handler_1.default((req, res) => __
         res.status(400);
         throw new Error('새로운 비밀번호가 일치하지 않습니다.');
     }
-    const user = yield User_1.User.findOne((_e = req.user) === null || _e === void 0 ? void 0 : _e.id, { select: ['password'] });
+    const user = yield User_1.User.findOne((_e = req.user) === null || _e === void 0 ? void 0 : _e.id, { select: ['password', 'email'] });
+    if ((user === null || user === void 0 ? void 0 : user.email) === 'demo@demo.com') {
+        res.status(400);
+        throw new Error('데모 계정은 정보를 변경할 수 없습니다. 😂');
+    }
     const isPasswordMatch = yield bcryptjs_1.default.compare(password, user === null || user === void 0 ? void 0 : user.password);
     if (!isPasswordMatch) {
         res.status(400);
-        throw new Error('기존 비밀번호를 정확히게 입력해주세요.');
+        throw new Error('기존 비밀번호를 정확하게 입력해주세요.');
     }
     yield User_1.User.update(user, { password: yield bcryptjs_1.default.hash(newPassword, 12) });
     res.json({ success: true });

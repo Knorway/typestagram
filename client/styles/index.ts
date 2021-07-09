@@ -11,6 +11,10 @@ const overrides = extendTheme({
 			},
 		}),
 	},
+	config: {
+		initialColorMode: 'light',
+		useSystemColorMode: false,
+	},
 });
 
 export default overrides;

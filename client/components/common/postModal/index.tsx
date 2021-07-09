@@ -117,6 +117,7 @@ function AddPost() {
 									console.log(error.response.data.message);
 								} finally {
 									dispatch(postModalActions.setLoading(false));
+									window.scrollTo(0, 0);
 								}
 							}}
 						>
