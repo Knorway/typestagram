@@ -65,9 +65,29 @@ https://typestagram.site (데모아이디로 로그인하기 버튼 클릭)
 <div>
 <br/>
 
+**클라이언트**
+
 [client/pages/\_app.tsx](https://github.com/Knorway/typestagram/blob/main/client/pages/_app.tsx)
 
-[client/lib/matchPathname.tsx](https://github.com/Knorway/typestagram/blob/main/client/lib/matchPathname.ts)
+[client/components/pages/login/index.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/login/index.tsx)
+
+[client/components/pages/register/index.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/register/index.tsx)
+
+[client/components/common/buttons/SocialLoginButton.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/common/buttons/SocialLoginButton.tsx)
+
+[client/lib/matchPathname.ts](https://github.com/Knorway/typestagram/blob/main/client/lib/matchPathname.ts)
+
+[client/hooks/useAuth.ts](https://github.com/Knorway/typestagram/blob/main/client/hooks/useAuth.ts)
+
+**서버**
+
+[server/src/middlewares/authMiddleware.ts](https://github.com/Knorway/typestagram/blob/main/server/src/middlewares/authMiddleware.ts)
+
+[server/src/config/passport.ts](https://github.com/Knorway/typestagram/blob/main/server/src/config/passport.ts)
+
+[server/src/routes/auth/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/auth/index.ts)
+
+[server/src/routes/user/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/user/index.ts)
 
 </div>
 </details>
@@ -82,6 +102,33 @@ https://typestagram.site (데모아이디로 로그인하기 버튼 클릭)
     <br/>
     <br/>
 
+<details>
+<summary>관련 코드</summary>
+<div>
+<br/>
+
+**클라이언트**
+
+[client/components/pages/home/PostList.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/PostList.tsx)
+
+[client/components/pages/home/postItem](https://github.com/Knorway/typestagram/tree/main/client/components/pages/home/postItem)
+
+[client/components/common/postModal](https://github.com/Knorway/typestagram/tree/main/client/components/common/postModal)
+
+[client/components/pages/home/AddPostButton.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/AddPostButton.tsx)
+
+[client/store/PostModal.ts](https://github.com/Knorway/typestagram/blob/main/client/store/PostModal.ts)
+
+**서버**
+
+[server/src/routes/post/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/post/index.ts#L112)
+
+[server/src/entity/Post.tss](https://github.com/Knorway/typestagram/blob/main/server/src/entity/Post.ts)
+
+</div>
+</details>
+<br />
+
 ### 댓글 작성과 좋아요 기능 <a id='댓글-작성과-좋아요-기능'></a>
 
 ![좋아요_1](https://github.com/Knorway/ImageBucket/blob/main/ImageBucket/project/typestagram/like_1.gif?raw=true)
@@ -93,6 +140,35 @@ https://typestagram.site (데모아이디로 로그인하기 버튼 클릭)
     <br/>
     <br/>
     <br/>
+
+<details>
+<summary>관련 코드</summary>
+<div>
+<br/>
+
+**클라이언트**
+
+[client/components/pages/home/postItem/index.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/postItem/index.tsx)
+
+[client/components/pages/home/postItem/UserInfo.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/postItem/UserInfo.tsx)
+
+[client/components/pages/home/postItem/PostItemImage.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/postItem/PostItemImage.tsx)
+
+[client/components/pages/home/postItem/LikeFollowSection.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/postItem/LikeFollowSection.tsx)
+
+[client/components/pages/home/postItem/CommentSection.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/postItem/CommentSection.tsx)
+
+**서버**
+
+[server/src/routes/post/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/post/index.ts#L166)
+
+[server/src/entity/juntion/Like.ts](https://github.com/Knorway/typestagram/blob/main/server/src/entity/junction/Like.ts)
+
+[server/src/entity/juntion/PostComment.ts](https://github.com/Knorway/typestagram/blob/main/server/src/entity/junction/PostComment.ts)
+
+</div>
+</details>
+<br />
 
 ### 무한 스크롤 및 검색 지연 <a id='무한-스크롤-및-검색-지연'></a>
 
@@ -107,23 +183,17 @@ https://typestagram.site (데모아이디로 로그인하기 버튼 클릭)
 <details>
 <summary>해당 코드</summary>
 <div>
+<br/>
 
-```javascript
-`client/lib/throttle.tsx`;
+**클라이언트**
 
-export const throttle = (callback: CallableFunction, delay: number) => {
-	let intervalId = null;
+[client/components/pages/home/PostList.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/PostList.tsx#L45)
 
-	return (...args: any) => {
-		if (intervalId) return;
-		intervalId = setInterval(() => {
-			callback(...args);
-			clearInterval(intervalId);
-			intervalId = null;
-		}, delay);
-	};
-};
-```
+[client/lib/throttle.ts](https://github.com/Knorway/typestagram/blob/main/client/lib/throttle.ts)
+
+**서버**
+
+[server/src/routes/post/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/post/index.ts#L15)
 
 </div>
 </details>
@@ -144,19 +214,17 @@ export const throttle = (callback: CallableFunction, delay: number) => {
 <details>
 <summary>해당 코드</summary>
 <div>
+<br/>
 
-```javascript
-`client/lib/debounce.tsx`;
+**클라이언트**
 
-export const debounce = (callback: CallableFunction, delay: number) => {
-	let timeout = null;
+[client/components/layouts/header/index.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/layouts/header/index.tsx#L23)
 
-	return (...args: any) => {
-		if (timeout) clearTimeout(timeout);
-		timeout = setTimeout(() => callback(...args), delay);
-	};
-};
-```
+[client/lib/debounce.ts](https://github.com/Knorway/typestagram/blob/main/client/lib/debounce.ts)
+
+**서버**
+
+[server/src/routes/post/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/post/index.ts#L47)
 
 </div>
 </details>
@@ -178,9 +246,15 @@ export const debounce = (callback: CallableFunction, delay: number) => {
 <div>
 <br/>
 
-[server/src/entity/junction/Followship.ts](https://github.com/Knorway/typestagram/blob/main/server/src/entity/junction/Followship.ts)
+**클라이언트**
+
+[client/components/pages/home/postItem/UserInfo.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/home/postItem/UserInfo.tsx#L45)
+
+**서버**
 
 [server/src/routes/user/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/user/index.ts#L96)
+
+[server/src/entity/junction/Followship.ts](https://github.com/Knorway/typestagram/blob/main/server/src/entity/junction/Followship.ts)
 
 </div>
 </details>
@@ -198,6 +272,31 @@ export const debounce = (callback: CallableFunction, delay: number) => {
     <br/>
     <br/>
     <br/>
+
+<details>
+<summary>관련 코드</summary>
+<div>
+<br/>
+
+**클라이언트**
+
+[client/components/layouts/AccountEditLayout.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/layouts/AccountEditLayout.tsx)
+
+[client/components/pages/account/AccountDetail.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/account/AccountDetail.tsx)
+
+[client/components/pages/account/edit/AccountDetailProfile.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/account/edit/AccountDetailProfile.tsx)
+
+[client/components/pages/account/edit/AccountDetailPassword.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/account/edit/AccountDetailPassword.tsx)
+
+[client/components/pages/account/edit/AccountCategory.tsx](https://github.com/Knorway/typestagram/blob/main/client/components/pages/account/edit/AccountCategory.tsx)
+
+**서버**
+
+[server/src/routes/user/index.ts](https://github.com/Knorway/typestagram/blob/main/server/src/routes/user/index.ts#L40)
+
+</div>
+</details>
+<br />
 
 ## 프로젝트 후기 <a id='프로젝트-후기'></a>
 
