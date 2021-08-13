@@ -128,11 +128,16 @@ const AccountDetail = () => {
 										router.push(`/posts/${post.uuid}`);
 									}}
 								>
-									<Image
-										src={post.img}
-										objectFit='cover'
-										height='100%'
-									/>
+									{post.img ? (
+										<Image
+											src={post.img}
+											objectFit='cover'
+											w='100%'
+											h='100%'
+										/>
+									) : (
+										<Box height='100%' w='100%'></Box>
+									)}
 								</HStack>
 							))}
 						</HStack>

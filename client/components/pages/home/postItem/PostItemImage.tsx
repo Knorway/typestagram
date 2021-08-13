@@ -3,12 +3,12 @@ import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Skeleton } from '@chakra-ui/skeleton';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import client from '../../../../api';
-import LikeFollowSection, { FilledLike } from './LikeFollowSection';
-import { BearerHeader } from '../../../../lib/bearerHeader';
 import useAuth from '../../../../hooks/useAuth';
+import { BearerHeader } from '../../../../lib/bearerHeader';
 import { swrStore } from '../../../../lib/swrStore';
+import LikeFollowSection, { FilledLike } from './LikeFollowSection';
 
 const LikeOverlay = styled(Box)`
 	transition: all ease-in 0.1s;

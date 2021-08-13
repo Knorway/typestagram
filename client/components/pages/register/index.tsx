@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { object, ref, string } from 'yup';
+import { object, string } from 'yup';
 import { registerUser } from '../../../api/auth';
 import { setTokenAndMutate } from '../../../lib/setTokenAndMutate';
 import BaseButton from '../../common/buttons/BaseButton';
