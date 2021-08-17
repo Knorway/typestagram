@@ -54,7 +54,7 @@ function PostItemImage({ post, context, contextMutate }) {
 	}, [likeOverlay]);
 
 	useEffect(() => {
-		setIsLiked(post.likes?.some((like) => like.userId === user.id));
+		setIsLiked(post.likes?.some((like: any) => like.userId === user.id));
 	}, [post]);
 
 	if (!post) return null;
