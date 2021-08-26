@@ -7,10 +7,10 @@ import { passportStrategies } from './config/passport';
 
 dotenv.config();
 
-const server = () => {
+const server = async () => {
 	const PORT = process.env.PORT || 4000;
 	try {
-		typeormConnection();
+		await typeormConnection();
 		passportStrategies(passport);
 		app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 	} catch (error) {
